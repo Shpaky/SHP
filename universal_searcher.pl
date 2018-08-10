@@ -21,14 +21,23 @@
 	## perl universal_searcher.pl -c 'print_list_projects' --file '.ism' 	 --type 'f' -d '/home/ftp-root/ftpusr010/return_Trailer' --extra target=directory nest=1
 	## perl universal_searcher.pl -c 'change_paths_to_ism' --file '.ism' 	 --type 'f' -d '/home/ftp-root/ftpusr010/return_Trailer' --extra target=file --copy
 	## perl universal_searcher.pl -c 'print_list_projects' --file "v.hi.und.mp4" --type 'f' -d '/home/tvzavr_old_projects' --extra target=file --filter resolution=640 resolution=less --out file=OUT mode='>' frmt=json
-	## 
+	##
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra nest=1 --filter resolution=640 resolution=equal --out file=OUT mode='>' frmt=json
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'addons' --type 'd' -d '/home/tvzavr_old_projects' --extra nest=1
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra nest=1
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra '||'='||' nest=1
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --inversion --extra '||=||' nest=1
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --inversion --extra nest=1
+	##
 	my $result = GetOptions 
 	( 
-		'file|f:s' => \$file, 
+		'file|f:s' => \$file, 						## temporary
 		'type|t:s' => \$type, 
 		'directories|d:s@{,}' => \$directories, 
+		'exist:s@{,}' => \$exist,
 		'recursion+' => \$recursion,
-		'single+' => \$single, 
+		'single+' => \$single,
+		'inversion+' => \$inversion,
 		'extra|e:s%{,}' => \$extra, 
 		'command|c=s' => \$command, 
 		'copy+' => \$copy, 
@@ -39,14 +48,16 @@
 	##	
 	##	search options
 	##	++++++++++++++
-	##	$file|f=file	
+	##	$file|f=file
 	##	$type|t=type		default|f|
 	##	$directory|d=directories
+	##	$exist=$exist		default|disabled|
 	##
 	##	search mode
 	##	***********
 	##	$recursion+		default|disabled|
 	##	$sinlge+		default|multiple|
+	##	$inversion+		default|disabled|
 	##
 	##	handler options
 	##	===============
@@ -54,8 +65,9 @@
 	##	{
 	##		target=file	default|search file|
 	##		nest=0|1|2|	default|0|
+	##		||=|||OR	default|AND|
 	##	}
-	##	$command|c=command	
+	##	$command|c=command
 	##	$copy+			default|disabled|
 	##	$force+			default|disabled|
 	##
@@ -81,18 +93,18 @@
 	##		substr	   => [ substring, inverse(0|1) ]			default|0|
 	##	}				
 	##
-	##	say Data::Dumper->Dump([$extra],['extra']);
+		say Data::Dumper->Dump([$extra],['extra']);
 	##	say Data::Dumper->Dump([$filter],['filter']);
 
 	&PROCESSING::export_name($command);
 	&PROCESSING::export_name('check_resolution');
 
-	my $re = &processing_to_re($file);	
+	my $re = &processing_to_re($file);
 
 	my $projects;
 	for my $pwd ( @$directories )
 	{
-		&read_dir($pwd,$re,$type);
+		&read_dir($pwd);
 	}
 	
 	given( $command )
@@ -105,21 +117,44 @@
 
 	sub read_dir
 	{
-		my ( $path, $re, $type ) = @_;
+		my ( $path ) = @_;
+
+		my $files = {};
+		@$files{@$exist} = ( 1 ) x scalar @$exist;
+		my $list->{$path} = $files;
+		#say Data::Dumper->Dump([$list],['list']);
+		#say Data::Dumper->Dump([$exist],['exist']);
+		#exit;
 
 		opendir RD, $path;
 		for( readdir(RD) )
 		{
 			if ( $type eq 'd' )
 			{
-				-d $path.'/'.$_ and /$re/ and $filter->{'day'} ? &cmp_date($path.'/'.$_,$filter->{'day'}) : 1 and push @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ and $single ? last : $recursion ? 1 : next;
+				-d $path.'/'.$_ and
+				$file ? /$re/ : 1 and
+				$filter->{'day'} ? &cmp_date($path.'/'.$_,$filter->{'day'}) : 1 and
+				push @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ and
+				$single ? last : $recursion ? 1 : next;
 			}
 			else
 			{
-				-f $path.'/'.$_ and /$re/ and $filter->{'day'} ? &cmp_date($path.'/'.$_,$filter->{'day'}) : 1 and $filter->{'substr'} ? &find_substr($path.'/'.$_,$filter->{'substr'}) : 1 and $filter->{'resolution'} ? &check_resolution($path.'/'.$_,$filter->{'resolution'}) : 1 and push @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ and $single ? last : next;
+				-f $path.'/'.$_ and
+				$file ? /$re/ : 1 and
+				$filter->{'day'} ? &cmp_date($path.'/'.$_,$filter->{'day'}) : 1 and
+				$filter->{'substr'} ? &find_substr($path.'/'.$_,$filter->{'substr'}) : 1 and
+				$filter->{'resolution'} ? &check_resolution($path.'/'.$_,$filter->{'resolution'}) : 1 and
+
+				scalar @$exist > 0 ? $extra->{'||'} ? delete($list->{$path}->{$_}) ? !$inversion ? push @$projects, split_path($path,$extra) ? last : next : last : next 
+								    : ( delete($list->{$path}->{$_}) && scalar keys %{$list->{$path}} == 0 ) ? !$inversion ? push @$projects, split_path($path,$extra) ? last : next : last : next 
+						   : 1 and
+
+				push @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ and
+				$single ? last : next;
 			}
-			-d $path.'/'.$_ and /^[^\.]/ and &read_dir($path.'/'.$_,$re,$type);
+			-d $path.'/'.$_ and /^[^\.]/ and &read_dir($path.'/'.$_);
 		}
+		$type ne 'd' and scalar @$exist > 0 and $inversion and $extra->{'||'} ? scalar keys %{$list->{$path}} : scalar keys %{$list->{$path}} == scalar @$exist and push @$projects, split_path($path,$extra);
 		closedir(RD);
 	}
 	
@@ -157,7 +192,7 @@
 		my ( $file ) = @_;
 		
 		$file =~ s/([._])/\\\1/g;
-		
+
 		$re = $file.'$';
 
 		return $re;
