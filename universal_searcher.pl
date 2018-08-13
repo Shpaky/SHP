@@ -24,8 +24,8 @@
 	##
 	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra nest=1 --filter resolution=640 resolution=equal --out file=OUT mode='>' frmt=json
 	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra nest=1
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra 'match'='||' nest=1
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'v.lw.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra nest=0 'match'='||' --out file=OUT mode='>'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra nest=1 match='||'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra nest=0 match='||' --out file=OUT mode='>'
 	##
 	my $result = GetOptions 
 	( 
@@ -132,19 +132,19 @@
 		{
 			if ( $type eq 'd' )
 			{
-				-d $path.'/'.$_ and
-				$file ? /$re/ : 1 and
-				$filter->{'day'} ? &cmp_date($path.'/'.$_,$filter->{'day'}) : 1 and
-				push @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ and
-				$single ? last : $recursion ? 1 : next;
+				-d $path.'/'.$_
+				and $file ? /$re/ : 1
+				and $filter->{'day'} ? &cmp_date($path.'/'.$_,$filter->{'day'}) : 1
+				and push @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_
+				and $single ? last : $recursion ? 1 : next;
 			}
 			else
 			{
-				-f $path.'/'.$_ and $file ? /$re/ : 1 and $filter->{'day'} ? &cmp_date($path.'/'.$_,$filter->{'day'}) : 1 
-				and $filter->{'substr'} ? &find_substr($path.'/'.$_,$filter->{'substr'}) : 1 
+				-f $path.'/'.$_ and $file ? /$re/ : 1 and $filter->{'day'} ? &cmp_date($path.'/'.$_,$filter->{'day'}) : 1
+				and $filter->{'substr'} ? &find_substr($path.'/'.$_,$filter->{'substr'}) : 1
 				and $filter->{'resolution'} ? &check_resolution($path.'/'.$_,$filter->{'resolution'}) : 1
-				and scalar @$exist > 0 ? $extra->{'||'} eq '||' ? delete($list->{$_}) ? !$inversion ? ( $list = {} ) ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
-								    		: delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$inversion ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next : 1
+				and scalar @$exist > 0 ? $extra->{'match'} eq '||' ? delete($list->{$_}) ? !$inversion ? ( $list = {} ) ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
+										   : delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$inversion ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next : 1
 				and push ( @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ ) and $single ? last : next;
 			}
 			-d $path.'/'.$_ and /^[^\.]/ and &read_dir($path.'/'.$_);
@@ -152,7 +152,7 @@
 		scalar @$exist > 0 and $inversion and $extra->{'||'} eq '||' ? scalar keys %{$list} : scalar keys %{$list} == scalar @$exist and push @$projects, split_path($path,$extra);
 		closedir(RD);
 	}
-	
+
 	sub find_substr
 	{
 		my ( $file, $substr ) = @_;					## on input substring - RE
