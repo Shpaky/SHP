@@ -162,9 +162,20 @@
 				-d $path.'/'.$_
 				and $file ? /$re/ : 1
 				and $filter->{'day'} ? &cmp_date($path.'/'.$_,$filter->{'day'}) : 1
-				and $extra->{'nest'} ? &nest_handler_check($path,$extra->{'nest'})
-						     ? push ( @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ ) : 1 ## may be use 'last' think about !may be specified most nesting!
-						     : push ( @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ )
+
+				and @{$exist->{files}} ? $extra->{'nest'}
+						       ? &nest_handler_check($path,$extra->{'nest'})
+						       ? $exist->{'match'}->[0] eq '||' ? delete($list->{$_}) ? !$exist->{'inversion'}->[0] ? ($list = {}) ? push ( @$projects, split_path($path,$extra) ) ? 1 : 1 : 1 : 1 : 1
+											: delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$exist->{'inversion'}->[0] ? push ( @$projects, split_path($path,$extra) ) ? 1 : 1 : 1 : 1 : 1
+						       : 1
+						       : $exist->{'match'}->[0] eq '||' ? delete($list->{$_}) ? !$exist->{'inversion'}->[0] ? ($list = {}) ? push ( @$projects, split_path($path,$extra) ) ? 1 : 1 : 1 : 1 : 1												     	     : delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$exist->{'inversion'}->[0] ? push ( @$projects, split_path($path,$extra) ) ? 1 : 1 : 1 : 1 : 1
+						       : 1
+
+				and ! scalar @{$exist->{files}} ? $extra->{'nest'} ? &nest_handler_check($path,$extra->{'nest'})
+										   ? push ( @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ ) : 1
+										   : push ( @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ )
+								: 1
+
 				and $single ? last : $recursion ? 1 : next;
 			}
 			else
@@ -180,7 +191,7 @@
 						       ? $exist->{'match'}->[0] eq '||' ? delete($list->{$_}) ? !$exist->{'inversion'}->[0] ? ($list = {}) ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
 											: delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$exist->{'inversion'}->[0] ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
 						       : next
-						       : $exist->{'match'}->[0] eq '||' ? delete($list->{$_}) ? !$exist->{'inversion'}->[0] ? ($list = {}) ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next											: delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$exist->{'inversion'}->[0] ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
+						       : $exist->{'match'}->[0] eq '||' ? delete($list->{$_}) ? !$exist->{'inversion'}->[0] ? ($list = {}) ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next											     : delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$exist->{'inversion'}->[0] ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
 						       : 1
 
 				and $extra->{'nest'} ? &nest_handler_check($path,$extra->{'nest'})
