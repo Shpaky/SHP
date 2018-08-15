@@ -18,14 +18,30 @@
 	## perl universal_searcher.pl -c 'reassemble_info_xml' --file "info.xml" --type 'f' -d '/home/tvzavr_d' --copy --filter substr=invers substr='lang=\"[a-z]{2}[q]\"'
 	## perl universal_searcher.pl -c 'reassemble_info_xml' --file "info.xml" --type 'f' -d '/home/tvzavr_d' --copy --force --filter substr='lang=\"[a-z]{2}[q]\"'
 	## perl universal_searcher.pl -c 'print_list_projects' --file '.ism' 	 --type 'f' -d '/home/ftp-root/ftpusr010/return_Trailer'
-	## perl universal_searcher.pl -c 'print_list_projects' --file '.ism' 	 --type 'f' -d '/home/ftp-root/ftpusr010/return_Trailer' --extra target=directory nest=1
+	## perl universal_searcher.pl -c 'print_list_projects' --file '.ism' 	 --type 'f' -d '/home/ftp-root/ftpusr010/return_Trailer' --extra target=directory path=1
 	## perl universal_searcher.pl -c 'change_paths_to_ism' --file '.ism' 	 --type 'f' -d '/home/ftp-root/ftpusr010/return_Trailer' --extra target=file --copy
 	## perl universal_searcher.pl -c 'print_list_projects' --file "v.hi.und.mp4" --type 'f' -d '/home/tvzavr_old_projects' --extra target=file --filter resolution=640 resolution=less --out file=OUT mode='>' frmt=json
 	##
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra nest=1 --filter resolution=640 resolution=equal --out file=OUT mode='>' frmt=json
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra nest=1
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra nest=1 match='||'
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra nest=0 match='||' --out file=OUT mode='>'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra path=1 --filter resolution=640 resolution=equal --out file=OUT mode='>' frmt=json
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra path=1
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra path=1 match='||'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' --out file=OUT mode='>'
+	##
+	## perl universal_searcher.pl -c 'print_list_projects' --file 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra path=1 nest='3' --out file=OUT mode='>' frmt=json path=path nest=1
+	## perl universal_searcher.pl -c 'print_list_projects' --file 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra nest='1..3' --out file=OUT mode='>'
+	##
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' --out file=OUT mode='>' --nest '2'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='&&' --out file=OUT mode='>' --nest '2'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='&&' --out file=OUT mode='>' --nest '3'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' --out file=OUT mode='>' --nest '3'
+	##
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra nest=2 path=0 match='||' --out file=OUT mode='>'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra nest=2..3 path=0 match='||' --out file=OUT mode='>' --nest '3'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra nest=2-3 path=0 match='||' --out file=OUT mode='>' --nest '4'
+	##
+	##
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' --out file=OUT mode='>' --nest '3'
+	##
 	##
 	my $result = GetOptions 
 	( 
@@ -69,8 +85,9 @@
 	##	$extra =
 	##	{
 	##		target=file	default|search file|
-	##		nest=0|1|2|	default|0|
+	##		path=0|1|2|	default|0|
 	##		match=|||&&	default|AND|
+	##		nest=[0-9]+	default|ALL|
 	##	}
 	##	$command|c=command
 	##	$copy+			default|disabled|
@@ -109,9 +126,11 @@
 	my $projects;
 	for my $pwd ( @$directories )
 	{
+		## instead RE neccessary add check setted value nest
+		( ( $nest and $nest =~ /[0-9]+/ ) or ( $extra->{'nest'} and $extra->{'nest'} =~ /[0-9]+|[0-9]+([\.]{2}|[-])[0-9]+/ ) ) and &nest_re($pwd);
 		&read_dir($pwd);
 	}
-	
+
 	given( $command )
 	{
 		when('print_list_projects') { &print_list_projects($projects) }
@@ -135,21 +154,52 @@
 				-d $path.'/'.$_
 				and $file ? /$re/ : 1
 				and $filter->{'day'} ? &cmp_date($path.'/'.$_,$filter->{'day'}) : 1
-				and push @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_
+				and $extra->{'nest'} ? &nest_handler_check($path,$extra->{'nest'})
+						     ? push ( @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ ) : next ## may be use 'last' think about !may be specified most nesting!
+						     : push ( @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ )
 				and $single ? last : $recursion ? 1 : next;
 			}
 			else
 			{
-				-f $path.'/'.$_ and $file ? /$re/ : 1 and $filter->{'day'} ? &cmp_date($path.'/'.$_,$filter->{'day'}) : 1
+				-f $path.'/'.$_
+				and $file ? /$re/ : 1
+				and $filter->{'day'} ? &cmp_date($path.'/'.$_,$filter->{'day'}) : 1
 				and $filter->{'substr'} ? &find_substr($path.'/'.$_,$filter->{'substr'}) : 1
 				and $filter->{'resolution'} ? &check_resolution($path.'/'.$_,$filter->{'resolution'}) : 1
-				and scalar @$exist > 0 ? $extra->{'match'} eq '||' ? delete($list->{$_}) ? !$inversion ? ( $list = {} ) ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
-										   : delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$inversion ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next : 1
-				and push ( @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ ) and $single ? last : next;
+
+				and scalar @$exist > 0 ? $extra->{'nest'}
+						       ? &nest_handler_check($path,$extra->{'nest'})
+						       ? $extra->{'match'} eq '||' ? delete($list->{$_}) ? !$inversion ? ( $list = {} ) ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
+										   : delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$inversion ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
+						       : next
+						       : $extra->{'match'} eq '||' ? delete($list->{$_}) ? !$inversion ? ( $list = {} ) ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
+										   : delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$inversion ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
+						       : 1
+
+				and $extra->{'nest'} ? &nest_handler_check($path,$extra->{'nest'})
+						     ? push ( @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ ) : next ## may be use 'last' think about !may be specified most nesting!
+						     : push ( @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ )
+
+				and $single ? last : next;
 			}
-			-d $path.'/'.$_ and /^[^\.]/ and &read_dir($path.'/'.$_);
+			-d $path.'/'.$_ and /^[^\.]/ and $nest ? &nest_search_check($path.'/'.$_,$nest) ? &read_dir($path.'/'.$_) : next : &read_dir($path.'/'.$_);
 		}
-		scalar @$exist > 0 and $inversion and $extra->{'||'} eq '||' ? scalar keys %{$list} : scalar keys %{$list} == scalar @$exist and push @$projects, split_path($path,$extra);
+#		scalar @$exist > 0 and $inversion and $extra->{'nest'} ? &nest_handler_check($path,$extra->{'nest'})
+#								       ? $extra->{'match'} eq '||' ? scalar keys %{$list} ? push ( @$projects, split_path($path,$extra) ) : undef
+#												   : scalar keys %{$list} == scalar @$exist ? push ( @$projects, split_path($path,$extra) ) : undef
+#								       : undef
+#								       : $extra->{'match'} eq '||' ? scalar keys %{$list} ? push ( @$projects, split_path($path,$extra) ) : undef
+#												   : scalar keys %{$list} == scalar @$exist ? push ( @$projects, split_path($path,$extra) ) : undef;
+
+		scalar @$exist > 0 and $inversion and $extra->{'match'} eq '||' ? scalar keys %{$list} ? $extra->{'nest'} ? &nest_handler_check($path,$extra->{'nest'})
+															  ? push ( @$projects, split_path($path,$extra) ) : undef
+															  : push ( @$projects, split_path($path,$extra) )
+															  : undef
+
+										: scalar keys %{$list} == scalar @$exist ? $extra->{'nest'} ? &nest_handler_check($path,$extra->{'nest'})
+															 ? push ( @$projects, split_path($path,$extra) ) : undef
+															 : push ( @$projects, split_path($path,$extra) )
+															 : undef;
 		closedir(RD);
 	}
 
@@ -196,7 +246,7 @@
 	{
 		my ( $path, $nest ) = @_;
 
-		$nest = ref($nest) eq 'HASH' ? $nest->{'nest'} : $nest;
+		$nest = ref($nest) eq 'HASH' ? $nest->{'path'} : $nest;
 	
 		$path =~ s/(.*)\/.+$/\1/ for ( 1..$nest );
 		 
@@ -209,4 +259,31 @@
 		$path =~ s/(\s)/\\\1/g;
 		
 		return $path;
+	}
+
+	sub nest_re
+	{
+		my ( $path ) = @_;
+
+		our $re1 = qr!$path!;
+		our $re2 = qr!/\S[^\/]+!;
+	}
+
+	sub nest_search_check
+	{
+		my ( $path, $nest ) = @_;
+		my ( $q );
+
+		( $q ) = $path =~ s/$re1|$re2//g and return $nest < ( $q - 1 ) ? undef : 1;
+	}
+
+	sub nest_handler_check
+	{
+		my ( $path, $nest ) = @_;
+		my ( $q );
+
+		$nest =~ s/[\.]+/-/;
+		$nest =~ /^[0-9]+$/
+		? ( ( $q ) = $path =~ s/$re1|$re2//g ) && return ( $nest != ( $q - 1 ) ) ? undef : 1									## for specific level
+		: ( ( $q ) = $path =~ s/$re1|$re2//g ) && return ( (split(/[-]/,$nest))[0] <= ( $q - 1 ) and (split(/[-]/,$nest))[1] >= ( $q - 1 ) ) ? 1 : undef;	## for levels range
 	}
