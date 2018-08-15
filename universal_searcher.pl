@@ -163,7 +163,7 @@
 				and $file ? /$re/ : 1
 				and $filter->{'day'} ? &cmp_date($path.'/'.$_,$filter->{'day'}) : 1
 				and $extra->{'nest'} ? &nest_handler_check($path,$extra->{'nest'})
-						     ? push ( @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ ) : next ## may be use 'last' think about !may be specified most nesting!
+						     ? push ( @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ ) : 1 ## may be use 'last' think about !may be specified most nesting!
 						     : push ( @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ )
 				and $single ? last : $recursion ? 1 : next;
 			}
