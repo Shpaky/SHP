@@ -22,28 +22,27 @@
 	## perl universal_searcher.pl -c 'change_paths_to_ism' --file '.ism' 	 --type 'f' -d '/home/ftp-root/ftpusr010/return_Trailer' --extra target=file --copy
 	## perl universal_searcher.pl -c 'print_list_projects' --file "v.hi.und.mp4" --type 'f' -d '/home/tvzavr_old_projects' --extra target=file --filter resolution=640 resolution=less 	--out file=OUT mode='>' frmt=json
 	##
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra path=1 --filter resolution=640 resolution=equal 	--out file=OUT mode='>' frmt=json
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra path=1
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra path=1 match='||'
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' 		--out file=OUT mode='>'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.lw.und.mp4 files=v.nr.und.mp4 --type 'f' -d '/home/tvzavr_old_projects' --extra path=1 --filter resolution=640 resolution=equal 	--out file=OUT frmt=json
+	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.lw.und.mp4 files=v.nr.und.mp4 --type 'f' -d '/home/tvzavr_old_projects' --extra path=1
+	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.lw.und.mp4 files=v.nr.und.mp4 match='||' --type 'f' -d '/home/tvzavr_old_projects'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=success --type 'f' -d '/home/tvzavr_old_projects'			--out file=OUT mode='>'
 	##
-	## perl universal_searcher.pl -c 'print_list_projects' --file 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra path=1 nest='3' 					--out file=OUT mode='>' frmt=json path=path nest=1
-	## perl universal_searcher.pl -c 'print_list_projects' --file 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra nest='1..3' 					--out file=OUT mode='>'
+	## perl universal_searcher.pl -c 'print_list_projects' --file 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra path=1 nest='3' 			--out file=OUT mode='>' frmt=json path=path nest=1
+	## perl universal_searcher.pl -c 'print_list_projects' --file 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra nest='1..3' 			--out file=OUT mode='>' --nest '2'
 	##
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success' --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' 	--out file=OUT mode='>' --nest '2'
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success' --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='&&' 	--out file=OUT mode='>' --nest '2'
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success' --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='&&' 	--out file=OUT mode='>' --nest '3'
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success' --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' 	--out file=OUT mode='>' --nest '3'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=success match='||' --type 'f' -d '/home/tvzavr_old_projects'		--out file=OUT mode='>' --nest '2'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=success match='&&' --type 'f' -d '/home/tvzavr_old_projects'		--out file=OUT mode='>' --nest '2'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=success match='&&' --type 'f' -d '/home/tvzavr_old_projects' 		--out file=OUT mode='>' --nest '3'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=success match='||' --type 'f' -d '/home/tvzavr_old_projects' 		--out file=OUT mode='>' --nest '3' --extra nest=2
 	##
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra nest=2 path=0 match='||' 	--out file=OUT mode='>'
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra nest=2..3 path=0 match='||' 	--out file=OUT mode='>' --nest '3'
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra nest=2-3 path=0 match='||' 	--out file=OUT mode='>' --nest '4'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=success match='||' --type 'f' -d '/home/tvzavr_old_projects' --extra nest=2    path=0 	--out file=OUT mode='>'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=success match='||' --type 'f' -d '/home/tvzavr_old_projects' --extra nest=2..3 path=0 	--out file=OUT mode='>' --nest '3'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=success match='&&' --type 'f' -d '/home/tvzavr_old_projects' --extra nest=2-3  path=0  	--out file=OUT mode='>' --nest '4'
 	##
-	##
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'  --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' 		--out file=OUT mode='>' --nest '3'
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'  --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' nest=1..2 	--out file=OUT mode='>' --nest '3'
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'  --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' nest=1-3	--out file=OUT mode='>' --nest '3'
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'  --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' nest=4 	--out file=OUT mode='>' --nest '3'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=success match='||' --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 		--out file=OUT mode='>' --nest '3'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=success match='||' --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 nest=1..2 	--out file=OUT mode='>' --nest '3'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=success match='||' --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 nest=1-3	--out file=OUT mode='>' --nest '3'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=success match='||' --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 nest=4 	--out file=OUT mode='>' --nest '3'
 	##
 	##
 	my $result = GetOptions 
@@ -52,11 +51,10 @@
 		'type|t:s' => \$type,
 		'nest|n:i' => \$nest,
 		'directories|d:s@{,}' => \$directories, 
-		'exist:s@{,}' => \$exist,
+		'exist:s%{,}' => sub {push(@{$exist->{$_[1]}}, $_[2])},
 		'recursion+' => \$recursion,
 		'single+' => \$single,
-		'inversion+' => \$inversion,
-		'extra|e:s%{,}' => \$extra, 
+		'extra|e:s%{,}' => \$extra,
 		'command|c=s' => \$command, 
 		'copy+' => \$copy, 
 		'force+' => \$force, 
@@ -67,10 +65,18 @@
 	##	search options
 	##	++++++++++++++
 	##	$file|f=file
-	##	$type|t=type		default|f|
-	##	$nest|n=nest		default|unlimited|	- develop
+	##	$type|t=type								default|f|
+	##	$nest|n=nest								default|unlimited|
 	##	$directory|d=directories
-	##	$exist=$exist		default|disabled|
+	##	$exist =
+	##	{
+	##		files 	  => [ file1, file2, file3 ]				default|empty|
+	##		.....
+	##		match 	  => [ &&||| ]						default|AND|
+	##		.....
+	##		inversion => [ 1|0 ]						default|0|
+	##		.........
+	##	}
 	##	.............................................
 	##      options 'file' and 'exist' exclude each other
 	##      options 'file' and 'exist' may use optionally
@@ -79,32 +85,30 @@
 	##
 	##	search mode
 	##	***********
-	##	$recursion+		default|disabled|
-	##	$sinlge+		default|multiple|
-	##	$inversion+		default|disabled|
+	##	$recursion+								default|disabled|
+	##	$sinlge+								default|multiple|
 	##
 	##	handler options
 	##	===============
 	##	$extra =
 	##	{
-	##		target=file	default|search file|
-	##		path=0|1|2|	default|0|
-	##		match=|||&&	default|AND|
-	##		nest=[0-9]+	default|ALL|
+	##		target=file							default|search file|
+	##		path=0|1|2|							default|0|
+	##		nest=[0-9]+							default|ALL|
 	##	}
 	##	$command|c=command
-	##	$copy+			default|disabled|
-	##	$force+			default|disabled|
+	##	$copy+									default|disabled|
+	##	$force+									default|disabled|
 	##
 	##	output options
 	##	~~~~~~~~~~~~~~
 	##	$out = 
 	##	{
-	##		path=path	default|target path|
-	##		nest=nest	default|0|
-	##		frmt=json	default|list string|
-	##		mode='>>'	default|>|
-	##		file=file	default|STDOUT|
+	##		path=path							default|target path|
+	##		nest=nest							default|0|
+	##		frmt=json							default|list string|
+	##		mode='>>'							default|>|
+	##		file=file							default|STDOUT|
 	##	}
 	##
 	##	filters options
@@ -119,6 +123,7 @@
 	##	}				
 	##
 	##	say Data::Dumper->Dump([$extra],['extra']);
+	##	say Data::Dumper->Dump([$exist],['exist']);
 	##	say Data::Dumper->Dump([$filter],['filter']);
 
 	&PROCESSING::export_name($command);
@@ -147,7 +152,7 @@
 		my ( $path ) = @_;
 		my ( $list ) = {};
 
-		@$list{@$exist} = ( 1 ) x scalar @$exist;
+		@$list{@{$exist->{'files'}}} = ( 1 ) x scalar @{$exist->{'files'}};
 
 		opendir RD, $path;
 		for( readdir(RD) )
@@ -170,13 +175,12 @@
 				and $filter->{'substr'} ? &find_substr($path.'/'.$_,$filter->{'substr'}) : 1
 				and $filter->{'resolution'} ? &check_resolution($path.'/'.$_,$filter->{'resolution'}) : 1
 
-				and scalar @$exist > 0 ? $extra->{'nest'}
+				and @{$exist->{files}} ? $extra->{'nest'}
 						       ? &nest_handler_check($path,$extra->{'nest'})
-						       ? $extra->{'match'} eq '||' ? delete($list->{$_}) ? !$inversion ? ( $list = {} ) ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
-										   : delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$inversion ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
+						       ? $exist->{'match'}->[0] eq '||' ? delete($list->{$_}) ? !$exist->{'inversion'}->[0] ? ($list = {}) ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
+											: delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$exist->{'inversion'}->[0] ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
 						       : next
-						       : $extra->{'match'} eq '||' ? delete($list->{$_}) ? !$inversion ? ( $list = {} ) ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
-										   : delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$inversion ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
+						       : $exist->{'match'}->[0] eq '||' ? delete($list->{$_}) ? !$exist->{'inversion'}->[0] ? ($list = {}) ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next											: delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$exist->{'inversion'}->[0] ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
 						       : 1
 
 				and $extra->{'nest'} ? &nest_handler_check($path,$extra->{'nest'})
@@ -194,15 +198,15 @@
 #								       : $extra->{'match'} eq '||' ? scalar keys %{$list} ? push ( @$projects, split_path($path,$extra) ) : undef
 #												   : scalar keys %{$list} == scalar @$exist ? push ( @$projects, split_path($path,$extra) ) : undef;
 
-		scalar @$exist > 0 and $inversion and $extra->{'match'} eq '||' ? scalar keys %{$list} ? $extra->{'nest'} ? &nest_handler_check($path,$extra->{'nest'})
-															  ? push ( @$projects, split_path($path,$extra) ) : undef
-															  : push ( @$projects, split_path($path,$extra) )
-															  : undef
+		scalar @{$exist->{'files'}} and $exist->{'inversion'}->[0] and $exist->{'match'}->[0] eq '||' ? scalar keys %{$list} ? $extra->{'nest'} ? &nest_handler_check($path,$extra->{'nest'})
+																     ? push ( @$projects, split_path($path,$extra) ) : undef
+														                     : push ( @$projects, split_path($path,$extra) )
+																     : undef
 
-										: scalar keys %{$list} == scalar @$exist ? $extra->{'nest'} ? &nest_handler_check($path,$extra->{'nest'})
-															 ? push ( @$projects, split_path($path,$extra) ) : undef
-															 : push ( @$projects, split_path($path,$extra) )
-															 : undef;
+													      : scalar keys %{$list} == scalar @{$exist->{'files'}} ? $extra->{'nest'} ? &nest_handler_check($path,$extra->{'nest'})
+																				    ? push ( @$projects, split_path($path,$extra) ) : undef
+																				    : push ( @$projects, split_path($path,$extra) )
+																				    : undef;
 		closedir(RD);
 	}
 
