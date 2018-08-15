@@ -14,33 +14,36 @@
 
 	## perl universal_searcher.pl -c 'print_list_projects' --file "info.xml" --type 'f' -d '/home/tvzavr_d' --filter day=60 day=old --filter substr='lang=\"[a-z]{2}[q]\"'
 	## perl universal_searcher.pl -c 'reassemble_info_xml' --file "info.xml" --type 'f' -d '/home/tvzavr_d' --filter day=60 day=new --filter substr='lang=\"[a-z]{2}[q]\"'
-	## perl universal_searcher.pl -c 'print_list_projects' --file "info.xml" --type 'f' -d '/home/tvzavr_d' --filter day=60 day=old --filter substr='lang=\"[a-z]{2}[q]\"' substr=! --out file=OUT mode='>' frmt=json
+	## perl universal_searcher.pl -c 'print_list_projects' --file "info.xml" --type 'f' -d '/home/tvzavr_d' --filter day=60 day=old --filter substr='lang=\"[a-z]{2}[q]\"' substr=! 	--out file=OUT mode='>' frmt=json
 	## perl universal_searcher.pl -c 'reassemble_info_xml' --file "info.xml" --type 'f' -d '/home/tvzavr_d' --copy --filter substr=invers substr='lang=\"[a-z]{2}[q]\"'
 	## perl universal_searcher.pl -c 'reassemble_info_xml' --file "info.xml" --type 'f' -d '/home/tvzavr_d' --copy --force --filter substr='lang=\"[a-z]{2}[q]\"'
 	## perl universal_searcher.pl -c 'print_list_projects' --file '.ism' 	 --type 'f' -d '/home/ftp-root/ftpusr010/return_Trailer'
 	## perl universal_searcher.pl -c 'print_list_projects' --file '.ism' 	 --type 'f' -d '/home/ftp-root/ftpusr010/return_Trailer' --extra target=directory path=1
 	## perl universal_searcher.pl -c 'change_paths_to_ism' --file '.ism' 	 --type 'f' -d '/home/ftp-root/ftpusr010/return_Trailer' --extra target=file --copy
-	## perl universal_searcher.pl -c 'print_list_projects' --file "v.hi.und.mp4" --type 'f' -d '/home/tvzavr_old_projects' --extra target=file --filter resolution=640 resolution=less --out file=OUT mode='>' frmt=json
+	## perl universal_searcher.pl -c 'print_list_projects' --file "v.hi.und.mp4" --type 'f' -d '/home/tvzavr_old_projects' --extra target=file --filter resolution=640 resolution=less 	--out file=OUT mode='>' frmt=json
 	##
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra path=1 --filter resolution=640 resolution=equal --out file=OUT mode='>' frmt=json
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra path=1 --filter resolution=640 resolution=equal 	--out file=OUT mode='>' frmt=json
 	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra path=1
 	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.lw.und.mp4' 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra path=1 match='||'
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' --out file=OUT mode='>'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' 		--out file=OUT mode='>'
 	##
-	## perl universal_searcher.pl -c 'print_list_projects' --file 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra path=1 nest='3' --out file=OUT mode='>' frmt=json path=path nest=1
-	## perl universal_searcher.pl -c 'print_list_projects' --file 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra nest='1..3' --out file=OUT mode='>'
+	## perl universal_searcher.pl -c 'print_list_projects' --file 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra path=1 nest='3' 					--out file=OUT mode='>' frmt=json path=path nest=1
+	## perl universal_searcher.pl -c 'print_list_projects' --file 'v.nr.und.mp4' --type 'f' -d '/home/tvzavr_old_projects' --extra nest='1..3' 					--out file=OUT mode='>'
 	##
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' --out file=OUT mode='>' --nest '2'
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='&&' --out file=OUT mode='>' --nest '2'
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='&&' --out file=OUT mode='>' --nest '3'
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' --out file=OUT mode='>' --nest '3'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success' --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' 	--out file=OUT mode='>' --nest '2'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success' --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='&&' 	--out file=OUT mode='>' --nest '2'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success' --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='&&' 	--out file=OUT mode='>' --nest '3'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success' --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' 	--out file=OUT mode='>' --nest '3'
 	##
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra nest=2 path=0 match='||' --out file=OUT mode='>'
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra nest=2..3 path=0 match='||' --out file=OUT mode='>' --nest '3'
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra nest=2-3 path=0 match='||' --out file=OUT mode='>' --nest '4'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra nest=2 path=0 match='||' 	--out file=OUT mode='>'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra nest=2..3 path=0 match='||' 	--out file=OUT mode='>' --nest '3'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra nest=2-3 path=0 match='||' 	--out file=OUT mode='>' --nest '4'
 	##
 	##
-	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'      --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' --out file=OUT mode='>' --nest '3'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'  --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' 		--out file=OUT mode='>' --nest '3'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'  --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' nest=1..2 	--out file=OUT mode='>' --nest '3'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'  --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' nest=1-3	--out file=OUT mode='>' --nest '3'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist 'v.nr.und.mp4' 'success'  --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 match='||' nest=4 	--out file=OUT mode='>' --nest '3'
 	##
 	##
 	my $result = GetOptions 
