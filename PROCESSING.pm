@@ -9,6 +9,7 @@
 
 	$PROCESSING::EXPORT = 
 	{
+		convert_low_quality => 'subroutine',
 		print_list_projects => 'subroutine',
 		check_resolution    => 'filter',
 	};
@@ -23,6 +24,32 @@
 	{
 		my $pack = caller(1);
 		map { local *myglob = eval('$'.$pack.'::'.'{'.$_.'}'); *{__PACKAGE__.'::'.$_} = *myglob; } @_;
+	}
+
+	sub convert_low_quality
+	{
+		my ( $projects ) = @_;
+
+		for my $project ( @$projects )
+		{
+			my $cnv_opts;
+			if ( -f $project.'/'.'v.hi.und.mp4' )
+			{
+				map { $cnv_opts .= ' -out_prf '.substr($_,2,2).' ' } grep { ! -f $project.'/'.$_ } ( 'v.nr.und.mp4', 'v.lw.und.mp4' );
+				say $cnv_opts;
+				if ( $cnv_opts )
+				{
+					say "Start to convert '$project/v.hi.und.mp4' to low profiles.";
+				## 	system("convert.pl -i '$project/v.hi.und.mp4' $cnv_opts") == 0 or say "Can't start 'convert.pl' to convert to low profiles: $!.";
+				##	map { rename $project.'/'.$_, $project.'/'.'v'.substr($_,9,2).'und'.'.mp4'  } grep { -f $project.'/'.$_ } ( 'v.hi.und.nr.mp4', 'v.hi.und.lw.mp4' );
+					map { say 'v.'.substr($_,9,2).'.und'.'.mp4'  } grep { ! -f $project.'/'.$_ } ( 'v.hi.und.nr.mp4', 'v.hi.und.lw.mp4' );
+				}
+				else
+				{
+					say "Low profiles exist - no encoding needed.";
+				}
+			}
+		}
 	}
 
 	sub reassemble_info_xml

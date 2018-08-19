@@ -44,6 +44,10 @@
 	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=success match='||' --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 nest=1-3	--out file=OUT mode='>' --nest '3'
 	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=success match='||' --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 nest=4 	--out file=OUT mode='>' --nest '3'
 	##
+	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=v.lw.und.mp4 match='||' inversion=1 --type 'f' -d '/home/tvzavr' --extra nest=3 --nest '3' --exclude='addons'
+	##perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=v.lw.und.mp4 match='||' inversion=1 --type 'f' -d '/home/tvzavr' --extra nest=3 --nest '3' --exclude='addons' --out file='PUT' mode='>'
+	##
+	## perl universal_searcher.pl -c 'convert_low_quality' --exist files=v.nr.und.mp4 files=v.lw.und.mp4 match='||' inversion=1 --type 'f' -d '/home/tvzavr' --extra nest=2 --nest '2'
 	##
 	my $result = GetOptions 
 	( 
@@ -52,6 +56,7 @@
 		'nest|n:i' => \$nest,
 		'directories|d:s@{,}' => \$directories, 
 		'exist:s%{,}' => sub {push(@{$exist->{$_[1]}}, $_[2])},
+		'exclude:s'=> \$exclude,
 		'recursion+' => \$recursion,
 		'single+' => \$single,
 		'extra|e:s%{,}' => \$extra,
@@ -68,6 +73,7 @@
 	##	$type|t=type								default|f|
 	##	$nest|n=nest								default|unlimited|
 	##	$directory|d=directories
+	##	$exclude								default|empty|
 	##	$exist =
 	##	{
 	##		files 	  => [ file1, file2, file3 ]				default|empty|
@@ -130,6 +136,7 @@
 	&PROCESSING::export_name('check_resolution');
 
 	my $re = &processing_to_re($file);
+	my $ex = &processing_to_re($exclude);
 
 	my $projects;
 	for my $pwd ( @$directories )
@@ -145,6 +152,7 @@
 		when('reassemble_info_xml') { &reassemble_info_xml($projects) }
 		when('change_paths_in_ism') { &change_paths_in_ism($projects) }
 		when('get_resolution_file') { &get_resolution_file($projects) }
+		when('convert_low_quality') { &convert_low_quality($projects) }
 	}
 
 	sub read_dir
@@ -157,6 +165,7 @@
 		opendir RD, $path;
 		for( readdir(RD) )
 		{
+			/$ex/ and next;
 			if ( $type eq 'd' )
 			{
 				-d $path.'/'.$_
@@ -255,8 +264,8 @@
 		my ( $file ) = @_;
 		
 		$file =~ s/([._])/\\\1/g;
-
-		$re = $file.'$';
+	#	$re = $file.'$';
+		$re = qr|$file$|;
 
 		return $re;
 	}
