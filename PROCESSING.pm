@@ -36,13 +36,20 @@
 			if ( -f $project.'/'.'v.hi.und.mp4' )
 			{
 				map { $cnv_opts .= ' -out_prf '.substr($_,2,2).' ' } grep { ! -f $project.'/'.$_ } ( 'v.nr.und.mp4', 'v.lw.und.mp4' );
-				say $cnv_opts;
+			##	say $cnv_opts;
 				if ( $cnv_opts )
 				{
 					say "Start to convert '$project/v.hi.und.mp4' to low profiles.";
-				## 	system("convert.pl -i '$project/v.hi.und.mp4' $cnv_opts") == 0 or say "Can't start 'convert.pl' to convert to low profiles: $!.";
-				##	map { rename $project.'/'.$_, $project.'/'.'v'.substr($_,9,2).'und'.'.mp4'  } grep { -f $project.'/'.$_ } ( 'v.hi.und.nr.mp4', 'v.hi.und.lw.mp4' );
-					map { say 'v.'.substr($_,9,2).'.und'.'.mp4'  } grep { ! -f $project.'/'.$_ } ( 'v.hi.und.nr.mp4', 'v.hi.und.lw.mp4' );
+					system("/usr/libexec/convert.pl -i '$project/v.hi.und.mp4' $cnv_opts") == 0 or say "Can't start 'convert.pl' to convert to low profiles: $!.";
+					map { rename $project.'/'.$_, $project.'/'.'v.'.substr($_,9,2).'.und'.'.mp4'  } grep { -f $project.'/'.$_ } ( 'v.hi.und.nr.mp4', 'v.hi.und.lw.mp4' );
+					map {
+						say    $project.'/'.'v.hi.und.'.$_.'-0.log',
+						       $project.'/'.'v.hi.und.'.$_.'-0.log.mbtree',
+						       $project.'/'.'v.hi.und.'.$_.'.pass1.stderr.log',
+						       $project.'/'.'v.hi.und.'.$_.'.pass2.stderr.log';
+					} ( 'nr', 'lw' );
+				##	map { unlink $project.'/'.$_ } ('v.hi.und.nr-0.log', 'v.hi.und.nr-0.log.mbtree', 'v.hi.und.nr.pass1.stderr.log', 'v.hi.und.nr.pass2.stderr.log');
+				##	map { say 'v.'.substr($_,9,2).'.und'.'.mp4'  } grep { ! -f $project.'/'.$_ } ( 'v.hi.und.nr.mp4', 'v.hi.und.lw.mp4' );
 				}
 				else
 				{

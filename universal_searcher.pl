@@ -45,9 +45,10 @@
 	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=success match='||' --type 'f' -d '/home/tvzavr_old_projects' --extra path=0 nest=4 	--out file=OUT mode='>' --nest '3'
 	##
 	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=v.lw.und.mp4 match='||' inversion=1 --type 'f' -d '/home/tvzavr' --extra nest=3 --nest '3' --exclude='addons'
-	##perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=v.lw.und.mp4 match='||' inversion=1 --type 'f' -d '/home/tvzavr' --extra nest=3 --nest '3' --exclude='addons' --out file='PUT' mode='>'
+	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=v.lw.und.mp4 match='||' inversion=1 --type 'f' -d '/home/tvzavr' --extra nest=3 --nest '3' --exclude='addons' --out file='PUT' mode='>'
 	##
 	## perl universal_searcher.pl -c 'convert_low_quality' --exist files=v.nr.und.mp4 files=v.lw.und.mp4 match='||' inversion=1 --type 'f' -d '/home/tvzavr' --extra nest=2 --nest '2'
+	## perl universal_searcher.pl -c 'convert_low_quality' --exist files=v.nr.und.mp4 files=v.lw.und.mp4 match='||' inversion=1 --type 'f' -d '/home/tvzavr' --extra nest=2 --nest '2' --exclude='addons'
 	##
 	my $result = GetOptions 
 	( 
@@ -165,7 +166,7 @@
 		opendir RD, $path;
 		for( readdir(RD) )
 		{
-			/$ex/ and next;
+			$exclude and /$ex/ and next;
 			if ( $type eq 'd' )
 			{
 				-d $path.'/'.$_
