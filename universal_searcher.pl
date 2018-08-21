@@ -50,6 +50,9 @@
 	## perl universal_searcher.pl -c 'convert_low_quality' --exist files=v.nr.und.mp4 files=v.lw.und.mp4 match='||' inversion=1 --type 'f' -d '/home/tvzavr' --extra nest=2 --nest '2'
 	## perl universal_searcher.pl -c 'convert_low_quality' --exist files=v.nr.und.mp4 files=v.lw.und.mp4 match='||' inversion=1 --type 'f' -d '/home/tvzavr' --extra nest=3 --nest '3' --exclude='addons'
 	##
+	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.ec4 --type 'f' -d '/home/tvzavr' --nest 3 --exclude='addons'
+	## perl universal_searcher.pl -c 'print_list_projects' --file 'v.ec4' --type 'f' -d '/home/tvzavr' --nest 3 --exclude 'addons'
+	##
 	my $result = GetOptions 
 	( 
 		'file|f:s' => \$file, 
@@ -136,8 +139,8 @@
 	&PROCESSING::export_name($command);
 	&PROCESSING::export_name('check_resolution');
 
-	my $re = &processing_to_re($file);
-	my $ex = &processing_to_re($exclude);
+	$file and my $re = &processing_to_re($file);
+	$exclude and my $ex = &processing_to_re($exclude);
 
 	my $projects;
 	for my $pwd ( @$directories )
@@ -265,8 +268,8 @@
 		my ( $file ) = @_;
 		
 		$file =~ s/([._])/\\\1/g;
-	#	$re = $file.'$';
-		$re = qr|$file$|;
+		chomp($file);
+		my $re = qr|$file$|;
 
 		return $re;
 	}
