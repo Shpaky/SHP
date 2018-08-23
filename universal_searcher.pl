@@ -145,8 +145,7 @@
 	my $projects;
 	for my $pwd ( @$directories )
 	{
-		## instead RE neccessary add check setted value nest
-		( ( $nest and $nest =~ /[0-9]+/ ) or ( $extra->{'nest'} and $extra->{'nest'} =~ /[0-9]+|[0-9]+([\.]{2}|[-])[0-9]+/ ) ) and &nest_re($pwd);
+		&set_nest_check and &nest_re($pwd);
 		&read_dir($pwd);
 	}
 
@@ -290,6 +289,14 @@
 		$path =~ s/(\s)/\\\1/g;
 		
 		return $path;
+	}
+
+	sub set_nest_check
+	{
+		return
+		( ( $nest and $nest =~ /[0-9]+/ ) or ( $extra->{'nest'} and $extra->{'nest'} =~ /[0-9]+|[0-9]+([\.]{2}|[-])[0-9]+/ ) )
+		? 1
+		: 0;
 	}
 
 	sub nest_re
