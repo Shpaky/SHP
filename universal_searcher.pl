@@ -105,6 +105,7 @@
 	##		target=file							default|search file|
 	##		path=0|1|2|							default|0|
 	##		nest=[0-9]+							default|ALL|
+	##		exclude=fnm							|in developing|
 	##	}
 	##	$command|c=command
 	##	$copy+									default|disabled|
@@ -119,6 +120,7 @@
 	##		frmt=json							default|list string|
 	##		mode='>>'							default|>|
 	##		file=file							default|STDOUT|
+	##		mail=mail							|in developing|
 	##	}
 	##
 	##	filters options
