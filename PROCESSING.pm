@@ -97,7 +97,8 @@
 		&import_name('split_path','shielding_blank');
 
 		my $pack = caller(1);
-		
+
+		my $blnk = eval('$'.$pack.'::'.'out'.'->'.'{'.'blnk'.'}');
 		my $frmt = eval('$'.$pack.'::'.'out'.'->'.'{'.'frmt'.'}') and my $hash = {};
 		my $path = eval('$'.$pack.'::'.'out'.'->'.'{'.'path'.'}') and my $nest = eval('$'.$pack.'::'.'out'.'->'.'{'.'nest'.'}');
 		my $file = eval('$'.$pack.'::'.'out'.'->'.'{'.'file'.'}') and my $mode = eval('$'.$pack.'::'.'out'.'->'.'{'.'mode'.'}');
@@ -107,7 +108,10 @@
 		{
 			for my $project ( @$projects )
 			{
-				lc($frmt) eq 'json' ? $path eq 'directory' ? $hash->{shielding_blank(split_path($project,$nest))} = 1 : $hash->{shielding_blank($project)} = 1 : say $path ? &shielding_blank(split_path($project,$nest)) : &shielding_blank($project);
+				lc($frmt) eq 'json' ? $path eq 'directory' ?
+				$blnk ? $hash->{shielding_blank(split_path($project,$nest))} = 1 : $hash->{split_path($project,$nest)} = 1 :
+				$blnk ? $hash->{shielding_blank($project)} = 1 : $hash->{$project} = 1 :
+				say $path ? $blnk ? &shielding_blank(split_path($project,$nest)) : split_path($project,$nest) : $blnk ? &shielding_blank($project) : $project;
 			}
 			lc($frmt) eq 'json' and say encode_json($hash);
 		}

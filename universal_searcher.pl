@@ -121,6 +121,7 @@
 	##		mode='>>'							default|>|
 	##		file=file							default|STDOUT|
 	##		mail=mail							|in developing|
+	##		blnk=escp							default|disabled|
 	##	}
 	##
 	##	filters options
