@@ -108,7 +108,7 @@
 	##		path=0|1|2|							default|0|
 	##		nest=[0-9]+							default|ALL|
 	##		exclude=fnm							|in developing|
-	##		route=route							|in developing|
+	##		route=route							default|empty|
 	##	}
 	##	$command|c=command
 	##	$copy+									default|disabled|
@@ -124,7 +124,7 @@
 	##		file=file							default|STDOUT|
 	##		frmt=json							default|list string|
 	##		mail=email							|in developing|
-	##		unix=socket							|in developing|
+	##		unix=socket							default|STDOUT|
 	##		inet=socket							|in developing|
 	##		blnk=escape							default|disabled|
 	##	}
