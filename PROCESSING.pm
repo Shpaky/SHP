@@ -98,16 +98,24 @@
 
 		my $pack = caller(1);
 
+		my $unix = eval('$'.$pack.'::'.'out'.'->'.'{'.'unix'.'}');
 		my $blnk = eval('$'.$pack.'::'.'out'.'->'.'{'.'blnk'.'}');
 		my $frmt = eval('$'.$pack.'::'.'out'.'->'.'{'.'frmt'.'}') and my $hash = {};
 		my $path = eval('$'.$pack.'::'.'out'.'->'.'{'.'path'.'}') and my $nest = eval('$'.$pack.'::'.'out'.'->'.'{'.'nest'.'}');
 		my $file = eval('$'.$pack.'::'.'out'.'->'.'{'.'file'.'}') and my $mode = eval('$'.$pack.'::'.'out'.'->'.'{'.'mode'.'}');
+
 		( $file  =~ /\/[\w]+/ or $file = $Bin.'/'.$file ) and -f $file and open STDOUT, $mode ? $mode : '>', $file;
+		( -S $unix and open STDOUT, $unix and my $route = eval('$'.$pack.'::'.'extra'.'->'.'{'.'route'.'}') );
 
 		if ( ref($projects) eq 'ARRAY' ) 
 		{
 			for my $project ( @$projects )
 			{
+				$unix and say encode_json(
+				{
+					'argv' => [ $path eq 'directory' ? $blnk ? shielding_blank(split_path($project,$nest)) : split_path($project,$nest) : $blnk ? shielding_blank($project) : $project ],
+					'route'=> $route
+				}) and next;
 				lc($frmt) eq 'json' ? $path eq 'directory' ?
 				$blnk ? $hash->{shielding_blank(split_path($project,$nest))} = 1 : $hash->{split_path($project,$nest)} = 1 :
 				$blnk ? $hash->{shielding_blank($project)} = 1 : $hash->{$project} = 1 :

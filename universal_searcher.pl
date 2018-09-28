@@ -53,6 +53,8 @@
 	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.ec4 --type 'f' -d '/home/tvzavr' --nest 3 --exclude='addons'
 	## perl universal_searcher.pl -c 'print_list_projects' --file 'v.ec4' --type 'f' -d '/home/tvzavr' --nest 3 --exclude 'addons'
 	##
+	## perl universal_searcher.pl -c 'print_list_projects' --file 'v.ec4' --type 'f' -d '/home/tvzavr' --nest 3 --exclude='addons' --out unix=/tmp/server-unix-socket/socket
+	##
 	my $result = GetOptions 
 	( 
 		'file|f:s' => \$file, 
@@ -106,6 +108,7 @@
 	##		path=0|1|2|							default|0|
 	##		nest=[0-9]+							default|ALL|
 	##		exclude=fnm							|in developing|
+	##		route=route							|in developing|
 	##	}
 	##	$command|c=command
 	##	$copy+									default|disabled|
@@ -117,11 +120,13 @@
 	##	{
 	##		path=path							default|target path|
 	##		nest=nest							default|0|
-	##		frmt=json							default|list string|
 	##		mode='>>'							default|>|
 	##		file=file							default|STDOUT|
-	##		mail=mail							|in developing|
-	##		blnk=escp							default|disabled|
+	##		frmt=json							default|list string|
+	##		mail=email							|in developing|
+	##		unix=socket							|in developing|
+	##		inet=socket							|in developing|
+	##		blnk=escape							default|disabled|
 	##	}
 	##
 	##	filters options
