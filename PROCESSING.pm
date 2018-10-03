@@ -127,6 +127,11 @@
 		}
 		else
 		{
+			$unix and $client = IO::Socket::UNIX->new(Type => SOCK_STREAM(),Peer => $unix) and say {$client} encode_json(
+			{
+				'argv' => [ $path eq 'directory' ? $blnk ? shielding_blank(split_path($projects,$nest)) : split_path($projects,$nest) : $blnk ? shielding_blank($projects) : $projects ],
+				'route'=> $route
+			}) and close $client and return;
 			lc($frmt) eq 'json' ? $path eq 'directory' ? $hash->{shielding_blank(split_path($projects,$nest))} = 1 : $hash->{shielding_blank($projects)} = 1 : say $path ? &shielding_blank(split_path($projects,$nest)) : &shielding_blank($projects);
 			lc($frmt) eq 'json' and say encode_json($hash);
 		}
