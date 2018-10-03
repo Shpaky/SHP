@@ -107,7 +107,7 @@
 	##		target=file							default|search file|
 	##		path=0|1|2|							default|0|
 	##		nest=[0-9]+							default|ALL|
-	##		exclude=fnm							|in developing|
+	##		except=file							|in developing|
 	##		route=route							default|empty|
 	##	}
 	##	$command|c=command
@@ -149,6 +149,7 @@
 
 	$file and my $re = &processing_to_re($file);
 	$exclude and my $ex = &processing_to_re($exclude);
+	$extra->{'except'} and my $except = &collect_exceptions($extra->{'except'});
 
 	my $projects;
 	for my $pwd ( @$directories )
@@ -332,4 +333,21 @@
 		$nest =~ /^[0-9]+$/
 		? ( ( $q ) = $path =~ s/$re1|$re2//g ) && return ( $nest != ( $q - 1 ) ) ? undef : 1									## for specific level
 		: ( ( $q ) = $path =~ s/$re1|$re2//g ) && return ( (split(/[-]/,$nest))[0] <= ( $q - 1 ) and (split(/[-]/,$nest))[1] >= ( $q - 1 ) ) ? 1 : undef;	## for levels range
+	}
+
+	sub collect_exceptions
+	{
+		my ( $exceptions ) = @_;
+		my ( $e, %e, $f );
+
+		map {
+			( -f $_ and $f = $_ ) ||
+			( -f $ENV{'PWD'}.'/'.$_ and $f = $ENV{'PWD'}.'/'.$_ ) ||
+			( -d $_ and $f = $_ ) and
+			-d $f
+			? ( push @{$e}, $f )
+			: ( open RF, $f and map { push @{$e}, $_ } grep {chomp} <RF> and close RF )
+		} @{$exceptions} and @e{@$e} = ( 1 ) x scalar @$e;
+
+		return $e;
 	}
