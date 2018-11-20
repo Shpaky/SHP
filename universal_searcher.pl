@@ -55,6 +55,8 @@
 	##
 	## perl universal_searcher.pl -c 'print_list_projects' --file 'v.ec4' --type 'f' -d '/home/tvzavr' --nest 3 --exclude='addons' --out unix=/tmp/server-unix-socket/socket
 	##
+	## perl universal_searcher.pl -c 'print_list_projects' --exist files=eng.srt files=rus.srt match='||' --type 'f' -d '/home/tvzavr_old_projects' -d '/home/tvzavr_d' -d '/home/tvzavr' --out unix=/tmp/server-unix-socket/socket  path=directory nest=1 --nest '3' --extra nest=3 route=fetch_main_uuid_from_project 
+	##
 	my $result = GetOptions 
 	( 
 		'file|f:s' => \$file, 
@@ -209,10 +211,10 @@
 
 				and @{$exist->{files}} ? $extra->{'nest'}
 						       ? &nest_handler_check($path,$extra->{'nest'})
-						       ? $exist->{'match'}->[0] eq '||' ? delete($list->{$_}) ? !$exist->{'inversion'}->[0] ? ($list = {}) ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
+						       ? $exist->{'match'}->[0] eq '||' ? delete($list->{$_}) ? !$exist->{'inversion'}->[0] ? ($list = {}) ? push ( @$projects, split_path($path,$extra) ) ? $single ? last : next : next : next : next : next 
 											: delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$exist->{'inversion'}->[0] ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
 						       : next
-						       : $exist->{'match'}->[0] eq '||' ? delete($list->{$_}) ? !$exist->{'inversion'}->[0] ? ($list = {}) ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next											     : delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$exist->{'inversion'}->[0] ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
+						       : $exist->{'match'}->[0] eq '||' ? delete($list->{$_}) ? !$exist->{'inversion'}->[0] ? ($list = {}) ? push ( @$projects, split_path($path,$extra) ) ? $single ? last : next : next : next : next : next											     : delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$exist->{'inversion'}->[0] ? push ( @$projects, split_path($path,$extra) ) ? next : next : next : next : next
 						       : 1
 
 				and $extra->{'nest'} ? &nest_handler_check($path,$extra->{'nest'})
@@ -333,6 +335,7 @@
 		$nest =~ /^[0-9]+$/
 		? ( ( $q ) = $path =~ s/$re1|$re2//g ) && return ( $nest != ( $q - 1 ) ) ? undef : 1									## for specific level
 		: ( ( $q ) = $path =~ s/$re1|$re2//g ) && return ( (split(/[-]/,$nest))[0] <= ( $q - 1 ) and (split(/[-]/,$nest))[1] >= ( $q - 1 ) ) ? 1 : undef;	## for levels range
+	## 	: ( ( $q ) = $path =~ s/$re1|$re2//g ) && return ( (split(/[-]/,$nest))[0] > ( $q - 1 ) or (split(/[-]/,$nest))[1] < ( $q - 1 ) ) ? undef : 1;		## for levels range
 	}
 
 	sub collect_exceptions
