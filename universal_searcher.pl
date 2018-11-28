@@ -109,7 +109,7 @@
 	##		target=file							default|search file|
 	##		path=0|1|2|							default|0|
 	##		nest=[0-9]+							default|ALL|
-	##		except=file							|in developing|
+	##		except=file							|in testing|
 	##		route=route							default|empty|
 	##	}
 	##	$command|c=command
@@ -211,15 +211,32 @@
 
 				and @{$exist->{files}} ? $extra->{'nest'}
 						       ? &nest_handler_check($path,$extra->{'nest'})
-						       ? $exist->{'match'}->[0] eq '||' ? delete($list->{$_}) ? !$exist->{'inversion'}->[0] ? ($list = {}) ? push ( @$projects, split_path($path,$extra) ) ? $single ? last : next : next : next : next : next 
-											: delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$exist->{'inversion'}->[0] ? push ( @$projects, split_path($path,$extra) ) ? $single ? last : next : next : next : next : next
+						       ? $exist->{'match'}->[0] eq '||' ? delete($list->{$_}) ? !$exist->{'inversion'}->[0] ? ($list = {})
+																	    ? !$except->{split_path($path,$extra)}
+																	    ? push ( @$projects, split_path($path,$extra) )
+																	    ? $single ? last : next : next : next : next : next : next
+											: delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$exist->{'inversion'}->[0]
+																	    ? !$except->{split_path($path,$extra)}
+																	    ? push ( @$projects, split_path($path,$extra) )
+																	    ? $single ? last : next : next : next : next : next : next
 						       : next
-						       : $exist->{'match'}->[0] eq '||' ? delete($list->{$_}) ? !$exist->{'inversion'}->[0] ? ($list = {}) ? push ( @$projects, split_path($path,$extra) ) ? $single ? last : next : next : next : next : next											     : delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$exist->{'inversion'}->[0] ? push ( @$projects, split_path($path,$extra) ) ? $single ? last : next : next : next : next : next
-						       : 1
+						       : $exist->{'match'}->[0] eq '||' ? delete($list->{$_}) ? !$exist->{'inversion'}->[0] ? ($list = {})
+																	    ? !$except->{split_path($path,$extra)}
+																	    ? push ( @$projects, split_path($path,$extra) )
+																	    ? $single ? last : next : next : next : next : next	: next
+											: delete($list->{$_}) ? scalar keys %{$list} == 0 ? !$exist->{'inversion'}->[0]
+																	    ? !$except->{split_path($path,$extra)}
+																	    ? push ( @$projects, split_path($path,$extra) )
+																	    ? $single ? last : next : next : next : next : next : next
+							: 1
 
 				and $extra->{'nest'} ? &nest_handler_check($path,$extra->{'nest'})
+						     ? !$except->{split_path($path,$extra)}
 						     ? push ( @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ ) : next ## may be use 'last' think about !may be specified most nesting!
-						     : push ( @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ )
+						     : next
+						     : !$except->{split_path($path,$extra)}
+						     ? push ( @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ )
+						     : next
 
 				and $single ? last : next;
 			}
@@ -233,13 +250,17 @@
 #												   : scalar keys %{$list} == scalar @$exist ? push ( @$projects, split_path($path,$extra) ) : undef;
 
 		scalar @{$exist->{'files'}} and $exist->{'inversion'}->[0] and $exist->{'match'}->[0] eq '||' ? scalar keys %{$list} ? $extra->{'nest'} ? &nest_handler_check($path,$extra->{'nest'})
-																     ? push ( @$projects, split_path($path,$extra) ) : undef
-														                     : push ( @$projects, split_path($path,$extra) )
+																     ? !$except->{split_path($path,$extra)}
+																     ? push ( @$projects, split_path($path,$extra) ) : undef : undef
+																     : !$except->{split_path($path,$extra)}
+														                     ? push ( @$projects, split_path($path,$extra) ) : undef
 																     : undef
 
 													      : scalar keys %{$list} == scalar @{$exist->{'files'}} ? $extra->{'nest'} ? &nest_handler_check($path,$extra->{'nest'})
+																				    ? !$except->{split_path($path,$extra)}
+																				    ? push ( @$projects, split_path($path,$extra) ) : undef : undef
+																				    : !$except->{split_path($path,$extra)}
 																				    ? push ( @$projects, split_path($path,$extra) ) : undef
-																				    : push ( @$projects, split_path($path,$extra) )
 																				    : undef;
 		closedir(RD);
 	}
