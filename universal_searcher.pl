@@ -57,7 +57,11 @@
 	##
 	## perl universal_searcher.pl -c 'print_list_projects' --exist files=eng.srt files=rus.srt match='||' --type 'f' -d '/home/tvzavr_old_projects' -d '/home/tvzavr_d' -d '/home/tvzavr' --out unix=/tmp/server-unix-socket/socket  path=directory nest=1 --nest '3' --extra nest=3 route=fetch_main_uuid_from_project 
 	##
-	## perl universal_searcher.pl -c 'print_list_projects' --file 'success' --type 'f' -d '/home/tvzavr_d' -d '/home/tvzavr' --filter day=23 day=new --exceptions except=OUT --out file=PUT mode='>'
+	## perl universal_searcher.pl -c 'print_list_projects' --file 'success' --type 'f' -d '/home/tvzavr_d' -d '/home/tvzavr' --filter day=23 day=new --exceptions except=OUT --out file=PUT mode='>' path=directory nest=1
+	## perl universal_searcher.pl -c 'print_list_projects' --file 'success' --type 'f' -d '/home/tvzavr_d' -d '/home/tvzavr' --filter day=23 day=new --exceptions lists=OUT --out file=PUT mode='>' --extra target=directory path=0
+	##
+	## perl universal_searcher.pl -c 'print_list_projects' --file 'info.xml' --type 'f' -d '/home/tvzavr_d' -d '/home/tvzavr' --filter day=1 day=new substr='preview' --out path=directory nest=3
+	## perl universal_searcher.pl -c 'print_list_projects' --file 'info.xml' --type 'f' -d '/home/tvzavr_d' -d '/home/tvzavr' --filter day=23 day=new substr='preview' substr='!' --out path=directory nest=3
 	##
 	my $result = GetOptions 
 	( 
