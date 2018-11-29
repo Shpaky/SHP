@@ -57,6 +57,8 @@
 	##
 	## perl universal_searcher.pl -c 'print_list_projects' --exist files=eng.srt files=rus.srt match='||' --type 'f' -d '/home/tvzavr_old_projects' -d '/home/tvzavr_d' -d '/home/tvzavr' --out unix=/tmp/server-unix-socket/socket  path=directory nest=1 --nest '3' --extra nest=3 route=fetch_main_uuid_from_project 
 	##
+	## perl universal_searcher.pl -c 'print_list_projects' --file 'success' --type 'f' -d '/home/tvzavr_d' -d '/home/tvzavr' --filter day=23 day=new --exceptions except=OUT --out file=PUT mode='>'
+	##
 	my $result = GetOptions 
 	( 
 		'file|f:s' => \$file, 
@@ -72,7 +74,8 @@
 		'copy+' => \$copy, 
 		'force+' => \$force, 
 		'out|o:s%{,}' => \$out, 
-		'filter:s%{,}' => sub {push(@{$filter->{$_[1]}}, $_[2])} 
+		'filter:s%{,}' => sub {push(@{$filter->{$_[1]}}, $_[2])},
+		'exceptions:s%{,}' => sub {push(@{$exceptions->{$_[1]}}, $_[2])}
 	) or die;
 	##	
 	##	search options
@@ -97,6 +100,17 @@
 	##	option 'directory' may contain multiple paths
 	##	option 'directory' must setted
 	##
+	##	$exceptions =
+	##	{
+	##		files	=> [ file, file, file ]
+	##		.....
+	##		lists	=> [ list, list, list ]
+	##		.....
+	##		except	=> [ file, list ]
+	##		......
+	##	}
+	##	.............................................
+	##
 	##	search mode
 	##	***********
 	##	$recursion+								default|disabled|
@@ -109,7 +123,6 @@
 	##		target=file							default|search file|
 	##		path=0|1|2|							default|0|
 	##		nest=[0-9]+							default|ALL|
-	##		except=file							|in testing|
 	##		route=route							default|empty|
 	##	}
 	##	$command|c=command
@@ -151,7 +164,10 @@
 
 	$file and my $re = &processing_to_re($file);
 	$exclude and my $ex = &processing_to_re($exclude);
-	$extra->{'except'} and my $except = &collect_exceptions($extra->{'except'});
+	scalar keys %$exceptions and my $except = &collect_exceptions($exceptions);
+
+	## neccessary think about of using 'debug' option
+	scalar keys %$except and say Data::Dumper->Dump([$except],['except']);
 
 	my $projects;
 	for my $pwd ( @$directories )
@@ -371,7 +387,7 @@
 			-d $f
 			? ( push @{$e}, $f )
 			: ( open RF, $f and map { push @{$e}, $_ } grep {chomp} <RF> and close RF )
-		} @{$exceptions} and @e{@$e} = ( 1 ) x scalar @$e;
+		} ( @{$exceptions->{'except'}}, @{$exceptions->{'files'}}, @{$exceptions->{'lists'}} ) and @e{@$e} = ( 1 ) x scalar @$e;
 
-		return $e;
+		return \%e;
 	}
