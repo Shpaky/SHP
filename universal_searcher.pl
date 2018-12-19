@@ -128,6 +128,7 @@
 	##		path=0|1|2|							default|0|
 	##		nest=[0-9]+							default|ALL|
 	##		route=route							default|empty|
+	##		limit=[0-9]							|in developing|
 	##	}
 	##	$command|c=command
 	##	$copy+									default|disabled|
