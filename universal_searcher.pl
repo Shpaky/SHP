@@ -62,7 +62,9 @@
 	##
 	## perl universal_searcher.pl -c 'print_list_projects' --file 'info.xml' --type 'f' -d '/home/tvzavr_d' -d '/home/tvzavr' --filter day=1 day=new substr='preview' --out path=directory nest=3
 	## perl universal_searcher.pl -c 'print_list_projects' --file 'info.xml' --type 'f' -d '/home/tvzavr_d' -d '/home/tvzavr' --filter day=23 day=new substr='preview' substr='!' --out path=directory nest=3
+	## perl universal_searcher.pl -c 'print_list_projects' --file 'info.xml' --type 'f' -d '/home/tvzavr' --filter substr='mp4\<\/link\>' substr=! --out file=OUT mode='>' blnk=escape --extra nest=4 target=directory path=2
 	##
+	## perl universal_searcher.pl -c 'print_list_projects' --exist files=info.xml --type 'f' -d '/home/mc_d' --extra nest=6 --nest '6' --out path=path nest=4
 	my $result = GetOptions 
 	( 
 		'file|f:s' => \$file, 
@@ -147,6 +149,7 @@
 	##		unix=socket							default|STDOUT|
 	##		inet=socket							|in developing|
 	##		blnk=escape							default|disabled|
+	##		uniq=unique							|in developing|
 	##	}
 	##
 	##	filters options
