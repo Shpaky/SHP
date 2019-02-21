@@ -156,13 +156,15 @@
 	##	---------------
 	##	$filter = 
 	##	{
-	##		resolution => [ width, more|less|equal, height, >|<|== ] 	default|==|
+	##		resolution => [ width, more|less|equal, height, >|<|== ] 		default|==|
 	##		..........
-	##		day	   => [ days, old|new ]					default|new|
+	##		day	   => [ days, old|new ]						default|new|
 	##		..........
-	##		substr	   => [ substring, inverse(0|1) ]			default|0|
-	##		.........
-	##		size	   => [ value, more|less|equal || >|<|== ]		|in developing|
+	##		substr	   => [ substring, inverse(0|1) ]				default|0|
+	##		..........
+	##		size	   => [ value, more|less|equal || >|<|== ]			|in developing|
+	##		..........
+	##		symlink	   => [ f|d|e, relation|direct || r|d, whole|broken || +|- ]	default|e.d.+|
 	##	}				
 	##
 	##	say Data::Dumper->Dump([$extra],['extra']);
@@ -246,6 +248,7 @@
 			{
 				-l $path.'/'.$_
 				and $file ? /$re/ : 1
+				and $filter->{'symlink'} ? &check_integrity_symlink($path.'/'.$_,$filter->{'symlink'}) : 1
 				and $filter->{'day'} ? &cmp_date($path.'/'.$_,$filter->{'day'}) : 1
 				and $extra->{'nest'} ? &nest_handler_check($path,$extra->{'nest'})
 						     ? !$except->{split_path($path,$extra)}
@@ -430,4 +433,47 @@
 		} ( @{$exceptions->{'except'}}, @{$exceptions->{'files'}}, @{$exceptions->{'lists'}} ) and @e{@$e} = ( 1 ) x scalar @$e;
 
 		return \%e;
+	}
+
+	sub check_integrity_symlink
+	{
+		my ( $symlink, $condition ) = @_;
+
+		my $target = $condition->[1] =~ /^(r|relation)$/ ? join('/',(split('/',$symlink))[0..scalar(split('/',$symlink))-2]).'/'.readlink($symlink) : readlink($symlink);
+
+		given($condition->[0])
+		{
+		##	when(/^(e|any|all)$/)	{ return -e $target ? $condition->[2] =~ /(\+|whole|entiry)/ ? 1 : 0 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
+		##	when(/^(f|file)$/)	{ return -f $target ? $condition->[2] =~ /(\+|whole|entiry)/ ? 1 : 0 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
+		##	when(/^(d|directory)$/) { return -d $target ? $condition->[2] =~ /(\+|whole|entiry)/ ? 1 : 0 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
+		##	default 		{ return -e $target ? $condition->[2] =~ /(\+|whole|entiry)/ ? 1 : 0 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
+
+			when(/^(e|any|all)$/)	{ return -e $target ? $condition->[2] =~ /(\-|broken|crash)/ ? 0 : 1 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
+			when(/^(f|file)$/)	{ return -f $target ? $condition->[2] =~ /(\-|broken|crash)/ ? 0 : 1 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
+			when(/^(d|directory)$/) { return -d $target ? $condition->[2] =~ /(\-|broken|crash)/ ? 0 : 1 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
+			default 		{ return -e $target ? $condition->[2] =~ /(\-|broken|crash)/ ? 0 : 1 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
+		}
+	}
+
+	sub check_integrity_symlink_1
+	{
+		my ( $symlink, $condition ) = @_;
+
+		my $target = $condition->[1] =~ /^(r|relation)$/ ? join('/',(split('/',$symlink))[0..scalar(split('/',$symlink))-2]).'/'.readlink($symlink) : readlink($symlink);
+
+	##	eval("&convert_condition_check_file($condition->[0])") ? $condition->[1] =~ /(\+|whole|entiry)/ ? 1 : 0 : $condition->[1] =~ /(\-|broken|crash)/ ? 1 : 0;
+		eval("&convert_condition_check_file($condition->[0])") ? $condition->[2] =~ /(\-|broken|crash)/ ? 0 : 1 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0;
+	}
+
+	sub convert_condition_check_file
+	{
+		my ( $condition ) = @_;
+
+		given($condition)
+		{
+			when(/^(e|any|all)$/)	{return '-e'}
+			when(/^(f|file)$/)	{return '-f'}
+			when(/^(d|directory)$/) {return '-d'}
+			default 		{return '-e'}
+		}
 	}
