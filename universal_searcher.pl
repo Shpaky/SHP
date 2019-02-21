@@ -1,4 +1,4 @@
-#!/usr/lib/perl
+#!/usr/bin/perl
 
 	## application fething by ready projects
 	
@@ -241,6 +241,21 @@
 								: 1
 
 				and $single ? last : $recursion ? 1 : next;
+			}
+			elsif ( $type eq 'l' )
+			{
+				-l $path.'/'.$_
+				and $file ? /$re/ : 1
+				and $filter->{'day'} ? &cmp_date($path.'/'.$_,$filter->{'day'}) : 1
+				and $extra->{'nest'} ? &nest_handler_check($path,$extra->{'nest'})
+						     ? !$except->{split_path($path,$extra)}
+						     ? push ( @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ ) : next ## may be use 'last' think about !may be specified most nesting!
+						     : next
+						     : !$except->{split_path($path,$extra)}
+						     ? push ( @$projects, $extra->{'target'} eq 'directory' ? split_path($path,$extra) : $path.'/'.$_ )
+						     : next
+
+				and $single ? last : next;
 			}
 			else
 			{
