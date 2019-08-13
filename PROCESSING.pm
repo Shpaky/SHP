@@ -10,7 +10,6 @@
 
 	$PROCESSING::EXPORT = 
 	{
-		convert_low_quality => 'subroutine',
 		print_list_projects => 'subroutine',
 		check_resolution    => 'filter',
 	};
@@ -72,98 +71,6 @@
 			lc($frmt) eq 'json' and say encode_json($hash);
 		}
 	}
-
-	sub change_substr_files
-	{
-		my ( $projects, $re1, $re2 ) = @_;
-		
-		my $pack = caller(1);
-		my $copy = eval('$'.$pack.'::'.'copy') ? 1 : 0;
-
-		if ( ref($projects) eq 'ARRAY' )
-		{
-			for my $project ( @$projects )
-			{
-				copy($project,$project.'_old');
-
-				open RF, '<', $project.'_old';
-				open WF, '>', $project;
-				for (<RF>)
-				{
-					s/$re1/$re2/g;
-					print WF;	
-				}
-				close WF;
-				close RF;
-
-				$copy || unlink $project.'_old';
-			}
-		}
-		else
-		{
-			copy($projects,$projects.'_old');
-
-			open RF, '<', $projects.'_old';
-			open WF, '>', $projects;
-			for (<RF>)
-			{
-				s/$re1/$re2/g;
-				print WF;	
-			}
-			close WF;
-			close RF;
-
-			$copy || unlink $projects.'_old';
-		}
-	}
-	sub change_paths_in_ism
-	{
-		my ( $projects ) = @_;
-		
-		my $pack = caller(1);
-		my $copy = eval('$'.$pack.'::'.'copy') ? 1 : 0;
-
-		if ( ref($projects) eq 'ARRAY' )
-		{
-			for my $project ( @$projects )
-			{
-				copy($project,$project.'_old');
-
-				$project =~ /([a-zA-Z]+)\/([a-zA-Z-]+)\/([a-zA-Z0-9]+)\/([a-zA-Z_]+)\/([a-zA-Z_-]+)\/([a-zA-Z_0-9-]+)\/([a-zA-Z0-9-_]+).*\.ism$/;
-				my ( $h, $o, $r, $p ) = ( $1, $5, $6, $7 );
-
-				open RF, '<', $project.'_old';
-				open WF, '>', $project;
-				for (<RF>)
-				{
-					s/\/$h\/$o\/([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_-]+)/\/$h\/$o\/$r\/$p/;
-					print WF;	
-				}
-				close WF;
-				close RF;
-
-				$copy || unlink $project.'_old';
-			}
-		}
-		else
-		{
-			copy($projects,$projects.'_old');
-
-			$projects =~ /([a-zA-Z]+)\/([a-zA-Z-]+)\/([a-zA-Z0-9]+)\/([a-zA-Z_]+)\/([a-zA-Z_-]+)\/([a-zA-Z_0-9-]+)\/([a-zA-Z0-9-_]+).*\.ism$/;
-			my ( $h, $o, $r, $p ) = ( $1, $5, $6, $7 );
-
-			open RF, '<', $projects.'_old';
-			open WF, '>', $projects;
-			for (<RF>)
-			{
-				s/\/$h\/$o\/([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_-]+)/\/$h\/$o\/$r\/$p/;
-				print WF;	
-			}
-			close WF;
-			close RF;
-			$copy || unlink $projects.'_old';
-		}
-	}
 	## filters
 	sub check_resolution
 	{
@@ -172,11 +79,85 @@
 		## this call necessary replace to accordance module of interaction with 'ffmpeg' and 'ffmprob'
 		my $resp = `ffprobe -v error -select_streams v:0 -show_entries stream=height,width -of csv=s=x:p=0 '$file' 2> /dev/null`;
 		my ( $w, $h ) = split(/x/,$resp);
-	
+
 		$filter->[0] and $filter->[1] = $filter->[1] eq 'less' ? '<' : $filter->[1] eq 'more' ? '>' : $filter->[1] eq 'equal' ? '==' : $filter->[1] ? $filter->[1] : '==';
 		$filter->[2] and $filter->[3] = $filter->[3] eq 'less' ? '<' : $filter->[3] eq 'more' ? '>' : $filter->[3] eq 'equal' ? '==' : $filter->[3] ? $filter->[3] : '==';
-		
+
 		## resolution => [ width, more|less|equal, height, >|==|< ]
 		eval("($w $filter->[1] $filter->[0])") and $filter->[2] ? eval("$h $filter->[3] $filter->[2]") : 1 and return $file; 
-	} 
+	}
+
+	sub find_substr
+	{
+		my ( $file, $substr ) = @_;					## on input substring - RE
+
+		open  RF, $file;
+		map { /$substr->[0]/ and $substr->[1] eq '!' ? return undef : return $file } <RF>;
+		close RF;
+
+		$substr->[1] eq '!'
+		? return 1 : return 0;
+	}
+
+	sub cmp_date
+	{
+		my ( $file, $date ) = @_;
+
+		my ( $cy, $cd ) = (localtime(time))[5,7];
+		my ( $fy, $fd ) = (localtime((stat($file))[9]))[5,7];
+
+		for ( 0..($cy - $fy - 1) )
+		{
+			( $fy + $_ ) % 4
+			? ( $cd += 365 )
+			: ( $cd += 366 );
+		}
+
+		return $date->[1] eq 'old'
+		? ( $cd - $date->[0] ) >= $fd
+		: ( $cd - $date->[0] ) <= $fd;
+	}
+
+	sub check_integrity_symlink
+	{
+		my ( $symlink, $condition ) = @_;
+
+		my $target = $condition->[1] =~ /^(r|relation)$/ ? join('/',(split('/',$symlink))[0..scalar(split('/',$symlink))-2]).'/'.readlink($symlink) : readlink($symlink);
+
+		given($condition->[0])
+		{
+		##	when(/^(e|any|all)$/)	{ return -e $target ? $condition->[2] =~ /(\+|whole|entiry)/ ? 1 : 0 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
+		##	when(/^(f|file)$/)	{ return -f $target ? $condition->[2] =~ /(\+|whole|entiry)/ ? 1 : 0 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
+		##	when(/^(d|directory)$/) { return -d $target ? $condition->[2] =~ /(\+|whole|entiry)/ ? 1 : 0 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
+		##	default 		{ return -e $target ? $condition->[2] =~ /(\+|whole|entiry)/ ? 1 : 0 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
+
+			when(/^(e|any|all)$/)	{ return -e $target ? $condition->[2] =~ /(\-|broken|crash)/ ? 0 : 1 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
+			when(/^(f|file)$/)	{ return -f $target ? $condition->[2] =~ /(\-|broken|crash)/ ? 0 : 1 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
+			when(/^(d|directory)$/) { return -d $target ? $condition->[2] =~ /(\-|broken|crash)/ ? 0 : 1 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
+			default 		{ return -e $target ? $condition->[2] =~ /(\-|broken|crash)/ ? 0 : 1 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
+		}
+	}
+
+	sub check_integrity_symlink_1
+	{
+		my ( $symlink, $condition ) = @_;
+
+		my $target = $condition->[1] =~ /^(r|relation)$/ ? join('/',(split('/',$symlink))[0..scalar(split('/',$symlink))-2]).'/'.readlink($symlink) : readlink($symlink);
+
+	##	eval("&convert_condition_check_file($condition->[0])") ? $condition->[1] =~ /(\+|whole|entiry)/ ? 1 : 0 : $condition->[1] =~ /(\-|broken|crash)/ ? 1 : 0;
+		eval("&convert_condition_check_file($condition->[0])") ? $condition->[2] =~ /(\-|broken|crash)/ ? 0 : 1 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0;
+	}
+
+	sub convert_condition_check_file
+	{
+		my ( $condition ) = @_;
+
+		given($condition)
+		{
+			when(/^(e|any|all)$/)	{return '-e'}
+			when(/^(f|file)$/)	{return '-f'}
+			when(/^(d|directory)$/) {return '-d'}
+			default 		{return '-e'}
+		}
+	}
 	1;

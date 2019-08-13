@@ -13,13 +13,9 @@
 	use PROCESSING;
 
 	## perl universal_searcher.pl -c 'print_list_projects' --file "info.xml" --type 'f' -d '/home/tvzavr_d' --filter day=60 day=old --filter substr='lang=\"[a-z]{2}[q]\"'
-	## perl universal_searcher.pl -c 'reassemble_info_xml' --file "info.xml" --type 'f' -d '/home/tvzavr_d' --filter day=60 day=new --filter substr='lang=\"[a-z]{2}[q]\"'
 	## perl universal_searcher.pl -c 'print_list_projects' --file "info.xml" --type 'f' -d '/home/tvzavr_d' --filter day=60 day=old --filter substr='lang=\"[a-z]{2}[q]\"' substr=! 	--out file=OUT mode='>' frmt=json
-	## perl universal_searcher.pl -c 'reassemble_info_xml' --file "info.xml" --type 'f' -d '/home/tvzavr_d' --copy --filter substr=invers substr='lang=\"[a-z]{2}[q]\"'
-	## perl universal_searcher.pl -c 'reassemble_info_xml' --file "info.xml" --type 'f' -d '/home/tvzavr_d' --copy --force --filter substr='lang=\"[a-z]{2}[q]\"'
 	## perl universal_searcher.pl -c 'print_list_projects' --file '.ism' 	 --type 'f' -d '/home/ftp-root/ftpusr010/return_Trailer'
 	## perl universal_searcher.pl -c 'print_list_projects' --file '.ism' 	 --type 'f' -d '/home/ftp-root/ftpusr010/return_Trailer' --extra target=directory path=1
-	## perl universal_searcher.pl -c 'change_paths_to_ism' --file '.ism' 	 --type 'f' -d '/home/ftp-root/ftpusr010/return_Trailer' --extra target=file --copy
 	## perl universal_searcher.pl -c 'print_list_projects' --file "v.hi.und.mp4" --type 'f' -d '/home/tvzavr_old_projects' --extra target=file --filter resolution=640 resolution=less 	--out file=OUT mode='>' frmt=json
 	##
 	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.lw.und.mp4 files=v.nr.und.mp4 --type 'f' -d '/home/tvzavr_old_projects' --extra path=1 --filter resolution=640 resolution=equal 	--out file=OUT frmt=json
@@ -47,9 +43,6 @@
 	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=v.lw.und.mp4 match='||' inversion=1 --type 'f' -d '/home/tvzavr' --extra nest=3 --nest '3' --exclude='addons'
 	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.nr.und.mp4 files=v.lw.und.mp4 match='||' inversion=1 --type 'f' -d '/home/tvzavr' --extra nest=3 --nest '3' --exclude='addons' --out file='PUT' mode='>'
 	##
-	## perl universal_searcher.pl -c 'convert_low_quality' --exist files=v.nr.und.mp4 files=v.lw.und.mp4 match='||' inversion=1 --type 'f' -d '/home/tvzavr' --extra nest=2 --nest '2'
-	## perl universal_searcher.pl -c 'convert_low_quality' --exist files=v.nr.und.mp4 files=v.lw.und.mp4 match='||' inversion=1 --type 'f' -d '/home/tvzavr' --extra nest=3 --nest '3' --exclude='addons'
-	##
 	## perl universal_searcher.pl -c 'print_list_projects' --exist files=v.ec4 --type 'f' -d '/home/tvzavr' --nest 3 --exclude='addons'
 	## perl universal_searcher.pl -c 'print_list_projects' --file 'v.ec4' --type 'f' -d '/home/tvzavr' --nest 3 --exclude 'addons'
 	##
@@ -65,6 +58,10 @@
 	## perl universal_searcher.pl -c 'print_list_projects' --file 'info.xml' --type 'f' -d '/home/tvzavr' --filter substr='mp4\<\/link\>' substr=! --out file=OUT mode='>' blnk=escape --extra nest=4 target=directory path=2
 	##
 	## perl universal_searcher.pl -c 'print_list_projects' --exist files=info.xml --type 'f' -d '/home/mc_d' --extra nest=6 --nest '6' --out path=path nest=4
+	##
+	## perl universal_searcher.pl -c 'print_list_projects' --file 'info.xml' --type 'f' --filter substr='alias="[^0-9]{1,}"' -d '/home/tvzavr_d' -d '/home/tvzavr' -d '/home/mc_d' -d '/home/tvzavr_old_projects' --extra target=directory path=2 nest=4 --out file=OUT mode='>'
+	## perl universal_searcher.pl -c 'print_list_projects' --file '.srt' --type 'f' -d '/home/tvzavr_d' -d '/home/tvzavr' -d '/home/mc_d' -d '/home/tvzavr_old_projects' --nest 3 --extra target=directory path=1 route=re_assemble_info_xml_by_project_of_type_multiple --out unix=/tmp/userver/socket --exceptions lists=OUT
+
 	my $result = GetOptions 
 	( 
 		'file|f:s' => \$file, 
@@ -83,7 +80,7 @@
 		'filter:s%{,}' => sub {push(@{$filter->{$_[1]}}, $_[2])},
 		'exceptions:s%{,}' => sub {push(@{$exceptions->{$_[1]}}, $_[2])}
 	) or die;
-	##	
+
 	##	search options
 	##	++++++++++++++
 	##	$file|f=file
@@ -166,13 +163,9 @@
 	##		..........
 	##		symlink	   => [ f|d|e, relation|direct || r|d, whole|broken || +|- ]	default|e.d.+|
 	##	}				
-	##
-	##	say Data::Dumper->Dump([$extra],['extra']);
-	##	say Data::Dumper->Dump([$exist],['exist']);
-	##	say Data::Dumper->Dump([$filter],['filter']);
 
 	&PROCESSING::export_name($command);
-	&PROCESSING::export_name('check_resolution');
+	&PROCESSING::export_name($_) for ('check_resolution','cmp_date','find_substr','check_integrity_symlink');
 
 	$file and my $re = &processing_to_re($file);
 	$exclude and my $ex = &processing_to_re($exclude);
@@ -191,10 +184,6 @@
 	given( $command )
 	{
 		when('print_list_projects') { &print_list_projects($projects) }
-		when('reassemble_info_xml') { &reassemble_info_xml($projects) }
-		when('change_paths_in_ism') { &change_paths_in_ism($projects) }
-		when('get_resolution_file') { &get_resolution_file($projects) }
-		when('convert_low_quality') { &convert_low_quality($projects) }
 	}
 
 	sub read_dir
@@ -324,35 +313,6 @@
 		closedir(RD);
 	}
 
-	sub find_substr
-	{
-		my ( $file, $substr ) = @_;					## on input substring - RE
-		
-		open  RF, $file;
-		map { /$substr->[0]/ and $substr->[1] eq '!' ? return undef : return $file } <RF>;
-		close RF;
-
-		$substr->[1] eq '!'
-		? return 1 : return 0;
-	}
-	sub cmp_date
-	{
-		my ( $file, $date ) = @_;
-
-		my ( $cy, $cd ) = (localtime(time))[5,7];
-		my ( $fy, $fd ) = (localtime((stat($file))[9]))[5,7];
-
-		for ( 0..($cy - $fy - 1) )
-		{
-			( $fy + $_ ) % 4
-			? ( $cd += 365 )
-			: ( $cd += 366 );
-		}
-	
-		return $date->[1] eq 'old'
-		? ( $cd - $date->[0] ) >= $fd
-		: ( $cd - $date->[0] ) <= $fd;
-	}
 	sub processing_to_re
 	{
 		my ( $file ) = @_;
@@ -433,47 +393,4 @@
 		} ( @{$exceptions->{'except'}}, @{$exceptions->{'files'}}, @{$exceptions->{'lists'}} ) and @e{@$e} = ( 1 ) x scalar @$e;
 
 		return \%e;
-	}
-
-	sub check_integrity_symlink
-	{
-		my ( $symlink, $condition ) = @_;
-
-		my $target = $condition->[1] =~ /^(r|relation)$/ ? join('/',(split('/',$symlink))[0..scalar(split('/',$symlink))-2]).'/'.readlink($symlink) : readlink($symlink);
-
-		given($condition->[0])
-		{
-		##	when(/^(e|any|all)$/)	{ return -e $target ? $condition->[2] =~ /(\+|whole|entiry)/ ? 1 : 0 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
-		##	when(/^(f|file)$/)	{ return -f $target ? $condition->[2] =~ /(\+|whole|entiry)/ ? 1 : 0 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
-		##	when(/^(d|directory)$/) { return -d $target ? $condition->[2] =~ /(\+|whole|entiry)/ ? 1 : 0 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
-		##	default 		{ return -e $target ? $condition->[2] =~ /(\+|whole|entiry)/ ? 1 : 0 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
-
-			when(/^(e|any|all)$/)	{ return -e $target ? $condition->[2] =~ /(\-|broken|crash)/ ? 0 : 1 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
-			when(/^(f|file)$/)	{ return -f $target ? $condition->[2] =~ /(\-|broken|crash)/ ? 0 : 1 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
-			when(/^(d|directory)$/) { return -d $target ? $condition->[2] =~ /(\-|broken|crash)/ ? 0 : 1 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
-			default 		{ return -e $target ? $condition->[2] =~ /(\-|broken|crash)/ ? 0 : 1 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0 }
-		}
-	}
-
-	sub check_integrity_symlink_1
-	{
-		my ( $symlink, $condition ) = @_;
-
-		my $target = $condition->[1] =~ /^(r|relation)$/ ? join('/',(split('/',$symlink))[0..scalar(split('/',$symlink))-2]).'/'.readlink($symlink) : readlink($symlink);
-
-	##	eval("&convert_condition_check_file($condition->[0])") ? $condition->[1] =~ /(\+|whole|entiry)/ ? 1 : 0 : $condition->[1] =~ /(\-|broken|crash)/ ? 1 : 0;
-		eval("&convert_condition_check_file($condition->[0])") ? $condition->[2] =~ /(\-|broken|crash)/ ? 0 : 1 : $condition->[2] =~ /(\-|broken|crash)/ ? 1 : 0;
-	}
-
-	sub convert_condition_check_file
-	{
-		my ( $condition ) = @_;
-
-		given($condition)
-		{
-			when(/^(e|any|all)$/)	{return '-e'}
-			when(/^(f|file)$/)	{return '-f'}
-			when(/^(d|directory)$/) {return '-d'}
-			default 		{return '-e'}
-		}
 	}
