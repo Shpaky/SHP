@@ -38,6 +38,7 @@
 		my $pack = caller(1);
 
 		my $unix = eval('$'.$pack.'::'.'out'.'->'.'{'.'unix'.'}');
+		my $uniq = eval('$'.$pack.'::'.'out'.'->'.'{'.'uniq'.'}');
 		my $blnk = eval('$'.$pack.'::'.'out'.'->'.'{'.'blnk'.'}');
 		my $frmt = eval('$'.$pack.'::'.'out'.'->'.'{'.'frmt'.'}') and my $hash = {};
 		my $path = eval('$'.$pack.'::'.'out'.'->'.'{'.'path'.'}') and my $nest = eval('$'.$pack.'::'.'out'.'->'.'{'.'nest'.'}');
@@ -48,20 +49,43 @@
 		( -S $unix and my $extra = eval('$'.$pack.'::'.'extra'.'->'.'{'.'data'.'}'));
 
 
+
 		if ( ref($projects) eq 'ARRAY' ) 
 		{
-			for my $project ( @$projects )
+			if ( $uniq eq 'unique')
 			{
-				$unix and $client = IO::Socket::UNIX->new(Type => SOCK_STREAM(),Peer => $unix) and say {$client} encode_json(
+				my %projects;
+				@projects{@$projects} = ( 1 ) x scalar @{$projects};
+
+				for my $project ( keys %projects )
 				{
-					'argv' => [ $path eq 'directory' ? $blnk ? shielding_blank(split_path($project,$nest)) : split_path($project,$nest) : $blnk ? shielding_blank($project) : $project ],
-					'route'=> $route,
-					'extra'=> { 'data' => [$extra] }
-				}) and close $client and next;
-				lc($frmt) eq 'json' ? $path eq 'directory' ?
-				$blnk ? $hash->{shielding_blank(split_path($project,$nest))} = 1 : $hash->{split_path($project,$nest)} = 1 :
-				$blnk ? $hash->{shielding_blank($project)} = 1 : $hash->{$project} = 1 :
-				say $path ? $blnk ? &shielding_blank(split_path($project,$nest)) : split_path($project,$nest) : $blnk ? &shielding_blank($project) : $project;
+					$unix and $client = IO::Socket::UNIX->new(Type => SOCK_STREAM(),Peer => $unix) and say {$client} encode_json(
+					{
+						'argv' => [ $path eq 'directory' ? $blnk ? shielding_blank(split_path($project,$nest)) : split_path($project,$nest) : $blnk ? shielding_blank($project) : $project ],
+						'route'=> $route,
+						'extra'=> { 'data' => [$extra] }
+					}) and close $client and next;
+					lc($frmt) eq 'json' ? $path eq 'directory' ?
+					$blnk ? $hash->{shielding_blank(split_path($project,$nest))} = 1 : $hash->{split_path($project,$nest)} = 1 :
+					$blnk ? $hash->{shielding_blank($project)} = 1 : $hash->{$project} = 1 :
+					say $path ? $blnk ? &shielding_blank(split_path($project,$nest)) : split_path($project,$nest) : $blnk ? &shielding_blank($project) : $project;
+				}
+			}
+			else
+			{
+				for my $project ( @$projects )
+				{
+					$unix and $client = IO::Socket::UNIX->new(Type => SOCK_STREAM(),Peer => $unix) and say {$client} encode_json(
+					{
+						'argv' => [ $path eq 'directory' ? $blnk ? shielding_blank(split_path($project,$nest)) : split_path($project,$nest) : $blnk ? shielding_blank($project) : $project ],
+						'route'=> $route,
+						'extra'=> { 'data' => [$extra] }
+					}) and close $client and next;
+					lc($frmt) eq 'json' ? $path eq 'directory' ?
+					$blnk ? $hash->{shielding_blank(split_path($project,$nest))} = 1 : $hash->{split_path($project,$nest)} = 1 :
+					$blnk ? $hash->{shielding_blank($project)} = 1 : $hash->{$project} = 1 :
+					say $path ? $blnk ? &shielding_blank(split_path($project,$nest)) : split_path($project,$nest) : $blnk ? &shielding_blank($project) : $project;
+				}
 			}
 			lc($frmt) eq 'json' and say encode_json($hash);
 		}

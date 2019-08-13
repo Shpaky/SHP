@@ -146,7 +146,7 @@
 	##		unix=socket							default|STDOUT|
 	##		inet=socket							|in developing|
 	##		blnk=escape							default|disabled|
-	##		uniq=unique							|in developing|
+	##		uniq=unique							default|disabled|
 	##	}
 	##
 	##	filters options
