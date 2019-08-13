@@ -45,7 +45,7 @@
 
 		( $file  =~ /\/[\w]+/ or $file = $Bin.'/'.$file ) and -f $file and open STDOUT, $mode ? $mode : '>', $file;
 		( -S $unix and my $route = eval('$'.$pack.'::'.'extra'.'->'.'{'.'route'.'}'));
-		( -S $unix and my $extra = eval('$'.$pack.'::'.'extra'.'->'.'{'.'extra'.'}'));
+		( -S $unix and my $extra = eval('$'.$pack.'::'.'extra'.'->'.'{'.'data'.'}'));
 
 
 		if ( ref($projects) eq 'ARRAY' ) 
@@ -56,8 +56,8 @@
 				{
 					'argv' => [ $path eq 'directory' ? $blnk ? shielding_blank(split_path($project,$nest)) : split_path($project,$nest) : $blnk ? shielding_blank($project) : $project ],
 					'route'=> $route,
-                                        'extra'=> $extra
-				} and close $client and next;
+					'extra'=> $extra
+				}) and close $client and next;
 				lc($frmt) eq 'json' ? $path eq 'directory' ?
 				$blnk ? $hash->{shielding_blank(split_path($project,$nest))} = 1 : $hash->{split_path($project,$nest)} = 1 :
 				$blnk ? $hash->{shielding_blank($project)} = 1 : $hash->{$project} = 1 :

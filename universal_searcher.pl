@@ -61,6 +61,8 @@
 	##
 	## perl universal_searcher.pl -c 'print_list_projects' --file 'info.xml' --type 'f' --filter substr='alias="[^0-9]{1,}"' -d '/home/tvzavr_d' -d '/home/tvzavr' -d '/home/mc_d' -d '/home/tvzavr_old_projects' --extra target=directory path=2 nest=4 --out file=OUT mode='>'
 	## perl universal_searcher.pl -c 'print_list_projects' --file '.srt' --type 'f' -d '/home/tvzavr_d' -d '/home/tvzavr' -d '/home/mc_d' -d '/home/tvzavr_old_projects' --nest 3 --extra target=directory path=1 route=re_assemble_info_xml_by_project_of_type_multiple --out unix=/tmp/userver/socket --exceptions lists=OUT
+	##
+	## perl universal_searcher.pl -c 'print_list_projects' --file '.srt' --type 'l' --filter symlink=f symlink=r symlink='-' -d '/home/mc_d' -d '/home/tvzavr_d' -d '/home/tvzavr' -d '/home/tvzavr_old_projects' --out file=OUT path=directory nest=3 --nest 4
 
 	my $result = GetOptions 
 	( 
@@ -126,7 +128,7 @@
 	##		target=file							default|search file|
 	##		path=0|1|2|							default|0|
 	##		nest=[0-9]+							default|ALL|
-	##		extra=data							default|empty|
+	##		data=extra							default|empty|
 	##		route=route							default|empty|
 	##		limit=[0-9]							|in developing|
 	##	}
