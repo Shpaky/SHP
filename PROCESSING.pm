@@ -56,7 +56,7 @@
 				{
 					'argv' => [ $path eq 'directory' ? $blnk ? shielding_blank(split_path($project,$nest)) : split_path($project,$nest) : $blnk ? shielding_blank($project) : $project ],
 					'route'=> $route,
-					'extra'=> $extra
+					'extra'=> { 'data' => [$extra] }
 				}) and close $client and next;
 				lc($frmt) eq 'json' ? $path eq 'directory' ?
 				$blnk ? $hash->{shielding_blank(split_path($project,$nest))} = 1 : $hash->{split_path($project,$nest)} = 1 :
@@ -71,7 +71,7 @@
 			{
 				'argv' => [ $path eq 'directory' ? $blnk ? shielding_blank(split_path($projects,$nest)) : split_path($projects,$nest) : $blnk ? shielding_blank($projects) : $projects ],
 				'route'=> $route,
-				'extra'=> $extra
+				'extra'=> { 'data' => [$extra] }
 			}) and close $client and return;
 			lc($frmt) eq 'json' ? $path eq 'directory' ? $hash->{shielding_blank(split_path($projects,$nest))} = 1 : $hash->{shielding_blank($projects)} = 1 : say $path ? &shielding_blank(split_path($projects,$nest)) : &shielding_blank($projects);
 			lc($frmt) eq 'json' and say encode_json($hash);

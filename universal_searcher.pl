@@ -7,9 +7,6 @@
 	use Data::Dumper;
 	use File::Copy;
 
-	use lib '../../HPVF/share/perl5/vendor_perl';
-	use avcdn::functions;
-	
 	use PROCESSING;
 
 	## perl universal_searcher.pl -c 'print_list_projects' --file "info.xml" --type 'f' -d '/home/tvzavr_d' --filter day=60 day=old --filter substr='lang=\"[a-z]{2}[q]\"'
