@@ -12,6 +12,9 @@
 	{
 		print_list_projects => 'subroutine',
 		check_resolution    => 'filter',
+		check_integrity_symlink => 'filter',
+		find_substr => 'filter',
+		cmp_date => 'filter'
 	};
 
 	sub export_name
@@ -42,6 +45,7 @@
 
 		( $file  =~ /\/[\w]+/ or $file = $Bin.'/'.$file ) and -f $file and open STDOUT, $mode ? $mode : '>', $file;
 		( -S $unix and my $route = eval('$'.$pack.'::'.'extra'.'->'.'{'.'route'.'}'));
+		( -S $unix and my $extra = eval('$'.$pack.'::'.'extra'.'->'.'{'.'extra'.'}'));
 
 
 		if ( ref($projects) eq 'ARRAY' ) 
@@ -51,8 +55,9 @@
 				$unix and $client = IO::Socket::UNIX->new(Type => SOCK_STREAM(),Peer => $unix) and say {$client} encode_json(
 				{
 					'argv' => [ $path eq 'directory' ? $blnk ? shielding_blank(split_path($project,$nest)) : split_path($project,$nest) : $blnk ? shielding_blank($project) : $project ],
-					'route'=> $route
-				}) and close $client and next;
+					'route'=> $route,
+                                        'extra'=> $extra
+				} and close $client and next;
 				lc($frmt) eq 'json' ? $path eq 'directory' ?
 				$blnk ? $hash->{shielding_blank(split_path($project,$nest))} = 1 : $hash->{split_path($project,$nest)} = 1 :
 				$blnk ? $hash->{shielding_blank($project)} = 1 : $hash->{$project} = 1 :
@@ -65,7 +70,8 @@
 			$unix and $client = IO::Socket::UNIX->new(Type => SOCK_STREAM(),Peer => $unix) and say {$client} encode_json(
 			{
 				'argv' => [ $path eq 'directory' ? $blnk ? shielding_blank(split_path($projects,$nest)) : split_path($projects,$nest) : $blnk ? shielding_blank($projects) : $projects ],
-				'route'=> $route
+				'route'=> $route,
+				'extra'=> $extra
 			}) and close $client and return;
 			lc($frmt) eq 'json' ? $path eq 'directory' ? $hash->{shielding_blank(split_path($projects,$nest))} = 1 : $hash->{shielding_blank($projects)} = 1 : say $path ? &shielding_blank(split_path($projects,$nest)) : &shielding_blank($projects);
 			lc($frmt) eq 'json' and say encode_json($hash);
